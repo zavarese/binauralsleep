@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:binauralsleep/shared_prefs.dart';
-import 'package:binauralsleep/style.dart';
+import 'package:binauralsleep/util/shared_prefs.dart';
+import 'package:binauralsleep/util/style.dart';
+import 'package:binauralsleep/util/components.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
@@ -42,7 +43,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
   String preparedPlayer = "0";
 
   //File browser
-  String loading = "";
+  String loading = "0Hz";
   String _loadedFile = "none";
   FilePickerResult result;
   File file;
@@ -59,6 +60,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
 
   @override
   Widget build(BuildContext context) {
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -74,15 +76,13 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    Padding(padding: const EdgeInsets.all(5.0)),
-                    floatButton(),
-                    Padding(padding: const EdgeInsets.all(3.0)),
+                    Padding(padding: const EdgeInsets.all(8.0)),
                     Text(
                         (currFreq==""?loading:f.format(double.parse(currFreq))+"Hz"),
                         style: TextStyle(
-                            color: Colors.grey,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14)
+                            fontSize: 32)
                     ),
                     Padding(padding: const EdgeInsets.all(5.0)),
                     Text(
@@ -97,25 +97,57 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                         textAlign: TextAlign.left,
                         style: textStyle
                     ),
-                    sliderFrequency(context),
+                    SliderCustomState(
+                        sliderCustom: SliderCustom(
+                            value: frequency,
+                            valueMin: freqMin,
+                            valueMax: freqMax,
+                            division: division,
+                            function: setFrequency
+                        )
+                    ),
                     Text(
                         "Time: "+minutes.toInt().toString()+"min",
                         textAlign: TextAlign.left,
                         style: textStyle
                     ),
-                    sliderMinute(context),
+                    SliderCustomState(
+                        sliderCustom: SliderCustom(
+                            value: minutes,
+                            valueMin: 15.0,
+                            valueMax: 60.0,
+                            division: 44,
+                            function: setMinutes
+                        )
+                    ),
                     Text(
-                        "Music Volume: "+(volumeMusic*10).toStringAsFixed(0)+"%",
+                        "Waves Volume: "+(volumeWaves).toStringAsFixed(0)+"%",
                         textAlign: TextAlign.left,
                         style: textStyle
                     ),
-                    sliderVolMusic(context),
+                    SliderCustomState(
+                        sliderCustom: SliderCustom(
+                            value: volumeWaves,
+                            valueMin: 10.0,
+                            valueMax: 100.0,
+                            division: 89,
+                            function: setVolumeWaves
+                        )
+                    ),
                     Text(
-                        "Waves Volume: "+(volumeWaves*10).toStringAsFixed(0)+"%",
+                        "Music Volume: "+(volumeMusic).toStringAsFixed(0)+"%",
                         textAlign: TextAlign.left,
                         style: textStyle
                     ),
-                    sliderVolWave(context),
+                    SliderCustomState(
+                        sliderCustom: SliderCustom(
+                            value: volumeMusic,
+                            valueMin: 10.0,
+                            valueMax: 100.0,
+                            division: 89,
+                            function: setVolumeMusic
+                        )
+                    ),
                     Container(
                         width: 350,
                         child: Row(
@@ -139,14 +171,55 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                         )
                     ),
                     Padding(padding: const EdgeInsets.all(3.0)),
-                    RaisedButton(
-                        color: Colors.blueGrey,
-                        textColor: Colors.black,
-                        child: Text("Sound File"),
-                        onPressed:(){
-                          fileBrowser();
-                        }
-                    )
+                    Row(
+                      mainAxisAlignment:  MainAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                            children: <Widget>[
+                              ButtonCustomState(
+                                button: ButtonCustom(
+                                    label: (isPlaying ? "stop" : "play"),
+                                    active: (isPlaying ? true : false),
+                                    function: playButton
+                                ),
+                              ),
+                            ]
+                        ),
+                        Column(
+                            children: <Widget>[
+                              ButtonCustomState(
+                                button: ButtonCustom(
+                                    label: 'save',
+                                    active: false,
+                                    function: fileBrowser
+                                ),
+                              ),
+                            ]
+                        ),
+                        Column(
+                            children: <Widget>[
+                              ButtonCustomState(
+                                button: ButtonCustom(
+                                    label: 'delete',
+                                    active: false,
+                                    function: fileBrowser
+                                ),
+                              ),
+                            ]
+                        ),
+                        Column(
+                            children: <Widget>[
+                              ButtonCustomState(
+                                button: ButtonCustom(
+                                    label: 'music',
+                                    active: (result==null?false:true),
+                                    function: (loading == "0Hz"?(result==null?fileBrowser:emptyMusic):null)
+                                ),
+                              ),
+                            ]
+                        ),
+                      ]
+                    ),
                   ],
                 ),
               ],
@@ -254,7 +327,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
 
   //To get mp3 or wav files
   Future<void> fileBrowser() async {
-    setState(() {loading = "Loading...";});
+    setState(() {loading = "loading...";});
 
     result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -267,7 +340,15 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
       file = File(result.files.single.path);
     }
 
-    setState(() {loading = "";});
+    setState(() {loading = "0Hz";});
+  }
+
+  void emptyMusic(){
+    if(loading == "0Hz" && isPlaying==false) {
+      setState(() {
+        result = null;
+      });
+    }
   }
 
   //Play configuration
@@ -288,9 +369,9 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
         'isoBeatMax': isoBeatMax.toString(),
         'isoBeatMin': isoBeatMin.toString(),
         'minutes': minutes.toString(),
-        'volumeWave': volume.toString(),
+        'volumeWave': (volume/10).toString(),
         'url': _loadedFile,
-        'volumeNoise': volumeMusic.toString(),
+        'volumeNoise': (volumeMusic/10).toString(),
         'decreasing': decreasing.toString(),
       });
       response = value;
@@ -311,11 +392,13 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
         'frequency': frequency.toString(),
         'isoBeatMax': isoBeatMax.toString(),
         'isoBeatMin': isoBeatMin.toString(),
+        'decreasing': decreasing.toString(),
       });
       response = value;
     } on PlatformException catch (e) {
       response = "Failed to Invoke: '${e.message}'.";
     }
+
     setState(() {_responseFromNativeCode = response;});
   }
 
@@ -368,6 +451,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
       }else{
         _timer.cancel();
         isPlaying = false;
+        result=null;
       }
     });
   }
@@ -393,10 +477,8 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
   }
 
   //Play float button
-  Widget floatButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        if(loading == "") {
+  void playButton() {
+    if(loading == "0Hz") {
           setState(() {
             if (isPlaying) {
               _timer.cancel();
@@ -409,15 +491,17 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
             }
           });
         }
-      },
-      // Display the correct icon depending on the state of the player.
-      child: Icon(isPlaying ? Icons.stop : Icons.play_arrow,),
-    );
   }
 
   Widget appBar () {
 
     return AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
         title: Form(
           key: _formKey,
           child:TextFormField(
@@ -471,146 +555,30 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
     );
   }
 
-  //Carrier frequency slider bar
-  Widget sliderFrequency(BuildContext context) {
-    return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      child: SliderTheme(
-        data: SliderTheme.of(context).copyWith(
-          trackShape: RoundedRectSliderTrackShape(),
-          trackHeight: 4.0,
-          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.0),
-          overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-          tickMarkShape: RoundSliderTickMarkShape(),
-          valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-          valueIndicatorTextStyle: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        child: Slider(
-          value: frequency,
-          min: freqMin,
-          max: freqMax,
-          divisions: division,
-          label: frequency.toInt().toString(),
-          onChanged: (double value) {
-            setState(() {
-              frequency = value;
-            });
-          },
-        ),
-      ),
-    );
+  void setFrequency(double value){
+    setState(() {
+      frequency = value;
+    });
   }
 
-  //Time of execution slider bar
-  Widget sliderMinute(BuildContext context) {
-    return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      child: SliderTheme(
-        data: SliderTheme.of(context).copyWith(
-          trackShape: RoundedRectSliderTrackShape(),
-          trackHeight: 4.0,
-          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.0),
-          overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-          tickMarkShape: RoundSliderTickMarkShape(),
-          valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-          valueIndicatorTextStyle: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        child: Slider(
-          value: minutes,
-          min: 15.0,
-          max: 60.0,
-          divisions: 44,
-          label: minutes.toInt().toString(),
-          onChanged: (double value) {
-            setState(() {
-              minutes = value;
-              sharedPrefs.minutes = minutes;
-            });
-          },
-        ),
-      ),
-    );
+  void setMinutes(double value) {
+    setState(() {
+      minutes = value;
+      sharedPrefs.minutes = minutes;
+    });
   }
 
-  //Music volume slider bar
-  Widget sliderVolMusic(BuildContext context) {
-    return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      child: SliderTheme(
-        data: SliderTheme.of(context).copyWith(
-          trackShape: RoundedRectSliderTrackShape(),
-          trackHeight: 4.0,
-          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.0),
-          overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-          tickMarkShape: RoundSliderTickMarkShape(),
-          valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-          valueIndicatorTextStyle: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        child: Slider(
-          value: volumeMusic,
-          min: 0.0,
-          max: 10.0,
-          divisions: 10,
-          label: (volumeMusic*10).toInt().toString(),
-          onChanged: (double value) {
-            setState(() {
-              volumeMusic = value;
-              sharedPrefs.volumeMusic = volumeMusic;
-            });
-          },
-        ),
-      ),
-    );
+  void setVolumeMusic(double value) {
+    setState(() {
+      volumeMusic = value;
+      sharedPrefs.volumeMusic = volumeMusic;
+    });
   }
 
-  //Wave volume slider bar
-  Widget sliderVolWave(BuildContext context) {
-    return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      child: SliderTheme(
-        data: SliderTheme.of(context).copyWith(
-          trackShape: RoundedRectSliderTrackShape(),
-          trackHeight: 4.0,
-          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.0),
-          overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
-          tickMarkShape: RoundSliderTickMarkShape(),
-          valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-          valueIndicatorTextStyle: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        child: Slider(
-          value: volumeWaves,
-          min: 0.0,
-          max: 10.0,
-          divisions: 10,
-          label: (volumeWaves*10).toInt().toString(),
-          onChanged: (double value) {
-            setState(() {
-              volumeWaves = value;
-              sharedPrefs.volumeWaves = volumeWaves;
-            });
-          },
-        ),
-      ),
-    );
+  void setVolumeWaves(double value) {
+    setState(() {
+      volumeWaves = value;
+      sharedPrefs.volumeWaves = volumeWaves;
+    });
   }
 }

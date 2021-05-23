@@ -147,16 +147,18 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         if(audioCurr!=null)audioCurr.setVolume(0.00001f);
         audioNext.play();
         Utils.sleepThread(50);
-        if (audioCurr != null) audioCurr.pause();
         audioNext.setVolume(0.1f);
         Utils.sleepThread(50);
+        audioNext.setVolume(binaural.paramVolume / 2);
 
-        if(audioCurr !=null) {
+        Utils.sleepThread(50);
+
+        if (audioCurr != null) {
+            audioCurr.pause();
+            while(audioCurr.getPlayState()==AudioTrack.PLAYSTATE_PLAYING)
             audioCurr.flush();
             audioCurr.release();
         }
-
-        audioNext.setVolume(binaural.paramVolume);
 
         Calendar c = Calendar.getInstance();
         if (c.get(Calendar.SECOND) > 30) {

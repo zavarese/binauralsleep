@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:binauralsleep/config_list.dart';
-import 'package:binauralsleep/configuration.dart';
+import 'package:binauralsleep/pages/config_list.dart';
+import 'package:binauralsleep/pages/configuration.dart';
 import 'package:flutter/services.dart';
 
 class Splash extends StatefulWidget {
@@ -15,7 +15,7 @@ class _SplashState extends State<Splash> {
     super.initState();
     //SystemChrome.setEnabledSystemUIOverlays([]);
     Future.delayed(Duration(seconds: 4)).then((_){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"Configuração",3,16,432,true)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"Alpha",3,16,432,true)));
     });
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:binauralsleep/shared_prefs.dart';
-import 'package:binauralsleep/splash.dart';
+import 'package:binauralsleep/util/shared_prefs.dart';
+import 'package:binauralsleep/pages/splash.dart';
 
 Future <void> main() async{
   WidgetsFlutterBinding.ensureInitialized();

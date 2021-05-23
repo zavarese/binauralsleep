@@ -10,3 +10,13 @@ TextStyle textStyleDropDown = TextStyle(
   fontWeight: FontWeight.normal,
   fontSize: 14,
 );
+TextStyle textStyleButton = TextStyle(
+  color: Colors.grey,
+  fontWeight: FontWeight.bold,
+  fontSize: 16,
+);
+TextStyle textStyleButtonAct = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 16,
+);

@@ -1,5 +1,5 @@
-import 'package:binauralsleep/binaural.dart';
-import 'package:binauralsleep/configuration.dart';
+import 'package:binauralsleep/model/binaural.dart';
+import 'package:binauralsleep/pages/configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';

@@ -52,11 +52,8 @@ public class MainActivity extends FlutterActivity {
                                     call.argument("url"),
                                     Float.parseFloat(call.argument("volumeNoise"))/10
                                     );
-
                             wave = new BinauralService();
                             wave.execute(binaural);
-
-                            showMessage("Playing");
 
                             result.success("");
                             break;
@@ -94,6 +91,7 @@ public class MainActivity extends FlutterActivity {
                             ));
 
                             //Toast.makeText(this, "Config added",2).show();
+                            showMessage("Configuration created");
                             result.success("");
                             break;
 
@@ -107,10 +105,13 @@ public class MainActivity extends FlutterActivity {
                                             Float.parseFloat(call.argument("isoBeatMax")),
                                             Boolean.parseBoolean(call.argument("decreasing"))
                             ));
+
+                            showMessage("Configuration updated");
                             result.success("");
                             break;
 
                         case "delete" :
+                            showMessage("Configuration deleted");
                             configDAO.deleteConfig(Integer.parseInt(call.argument("id")));
                             result.success("");
                             break;
@@ -127,6 +128,7 @@ public class MainActivity extends FlutterActivity {
                 });
 
     }
+
     protected void onDestroy() {
         wave.stop(binaural,2);
         super.onDestroy();
