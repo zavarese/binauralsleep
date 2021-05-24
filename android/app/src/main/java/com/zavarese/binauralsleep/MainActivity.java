@@ -50,7 +50,8 @@ public class MainActivity extends FlutterActivity {
                                     Float.parseFloat(call.argument("volumeWave"))/10,
                                     Boolean.parseBoolean(call.argument("decreasing")),
                                     call.argument("url"),
-                                    Float.parseFloat(call.argument("volumeNoise"))/10
+                                    Float.parseFloat(call.argument("volumeNoise"))/10,
+                                    Boolean.parseBoolean(call.argument("loop"))
                                     );
                             wave = new BinauralService();
                             wave.execute(binaural);

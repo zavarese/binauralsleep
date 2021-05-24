@@ -15,8 +15,9 @@ public class FilePlayer {
     private short channel;
     private int sessionId1;
     private int sessionId2;
+    private boolean loop;
 
-    public FilePlayer(String url, float volume, short channel, int sessionId1, int sessionId2){
+    public FilePlayer(String url, float volume, short channel, int sessionId1, int sessionId2, boolean loop){
         this.url = url;
         this.volume = volume;
         this.currentPlayer = new MediaPlayer();
@@ -25,6 +26,7 @@ public class FilePlayer {
         this.channel = channel;
         this.sessionId1 = sessionId1;
         this.sessionId2 = sessionId2;
+        this.loop = loop;
 
         this.currentPlayer.setAudioSessionId(this.sessionId1);
         this.eqCurr = new Equalizer(Integer.MAX_VALUE,this.sessionId1);
@@ -98,7 +100,7 @@ public class FilePlayer {
                 }
             };
 
-    public void play(boolean loop){
+    public void play(){
         try {
             currentPlayer.setDataSource(url);
             currentPlayer.setVolume(this.volume, this.volume);

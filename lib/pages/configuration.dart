@@ -31,6 +31,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
   double minutes = sharedPrefs.minutes;
   double volumeMusic = sharedPrefs.volumeMusic;
   double volumeWaves = sharedPrefs.volumeWaves;
+  bool loop = true;
 
   ConfigPageState(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.frequency,this.decreasing);
 
@@ -148,6 +149,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                             function: setVolumeMusic
                         )
                     ),
+                    /*
                     Container(
                         width: 350,
                         child: Row(
@@ -170,6 +172,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                           ],
                         )
                     ),
+                    */
                     Padding(padding: const EdgeInsets.all(3.0)),
                     Row(
                       mainAxisAlignment:  MainAxisAlignment.center,
@@ -185,35 +188,70 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                               ),
                             ]
                         ),
-                        Column(
-                            children: <Widget>[
-                              ButtonCustomState(
-                                button: ButtonCustom(
-                                    label: 'save',
-                                    active: false,
-                                    function: fileBrowser
-                                ),
-                              ),
-                            ]
-                        ),
-                        Column(
-                            children: <Widget>[
-                              ButtonCustomState(
-                                button: ButtonCustom(
-                                    label: 'delete',
-                                    active: false,
-                                    function: fileBrowser
-                                ),
-                              ),
-                            ]
-                        ),
+                        Column(children: <Widget>[SizedBox(width:4)]),
                         Column(
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
                                     label: 'music',
                                     active: (result==null?false:true),
-                                    function: (loading == "0Hz"?(result==null?fileBrowser:emptyMusic):null)
+                                    function: (isPlaying==false?(loading == "0Hz"?(result==null?fileBrowser:emptyMusic):null):null),
+                                ),
+                              ),
+                            ]
+                        ),
+                        Column(children: <Widget>[SizedBox(width:4)]),
+                        Column(
+                            children: <Widget>[
+                              ButtonCustomState(
+                                button: ButtonCustom(
+                                    label: 'loop',
+                                    active: (loop==true?true:false),
+                                    function: (isPlaying==false?setLoop:null),
+                                ),
+                              ),
+                            ]
+                        ),
+                      ]
+                    ),
+                    Row(
+                      mainAxisAlignment:  MainAxisAlignment.center,
+                      children: <Widget>[SizedBox(height: 4,)]
+                    ),
+                    Row(
+                      mainAxisAlignment:  MainAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                            children: <Widget>[
+                              ButtonCustomState(
+                                button: ButtonCustom(
+                                    label: (decreasing==true?'down':'up'),
+                                    active: false,
+                                    function: (isPlaying==false?setDecreasing:null),
+                                ),
+                              ),
+                            ]
+                        ),
+                        Column(children: <Widget>[SizedBox(width:4)]),
+                        Column(
+                            children: <Widget>[
+                              ButtonCustomState(
+                                button: ButtonCustom(
+                                    label: 'save',
+                                    active: false,
+                                    function: (isPlaying==false?fileBrowser:null)
+                                ),
+                              ),
+                            ]
+                        ),
+                        Column(children: <Widget>[SizedBox(width:4)]),
+                        Column(
+                            children: <Widget>[
+                              ButtonCustomState(
+                                button: ButtonCustom(
+                                    label: 'delete',
+                                    active: false,
+                                    function: (isPlaying==false?fileBrowser:null)
                                 ),
                               ),
                             ]
@@ -343,14 +381,6 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
     setState(() {loading = "0Hz";});
   }
 
-  void emptyMusic(){
-    if(loading == "0Hz" && isPlaying==false) {
-      setState(() {
-        result = null;
-      });
-    }
-  }
-
   //Play configuration
   Future<void> play(double volume) async {
     String response = "";
@@ -373,6 +403,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
         'url': _loadedFile,
         'volumeNoise': (volumeMusic/10).toString(),
         'decreasing': decreasing.toString(),
+        'loop': loop.toString(),
       });
       response = value;
     } on PlatformException catch (e) {
@@ -579,6 +610,34 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
     setState(() {
       volumeWaves = value;
       sharedPrefs.volumeWaves = volumeWaves;
+    });
+  }
+
+  void emptyMusic(){
+    if(loading == "0Hz" && isPlaying==false) {
+      setState(() {
+        result = null;
+      });
+    }
+  }
+
+  void setDecreasing(){
+    setState(() {
+      if (decreasing == true) {
+        decreasing = false;
+      } else {
+        decreasing = true;
+      }
+    });
+  }
+
+  void setLoop(){
+    setState(() {
+      if (loop == true) {
+        loop = false;
+      } else {
+        loop = true;
+      }
     });
   }
 }

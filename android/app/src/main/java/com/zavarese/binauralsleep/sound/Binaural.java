@@ -25,6 +25,7 @@ public class Binaural{
     public static int sessionId2;
     public static int sessionId3;
     public static int sessionId4;
+    public static boolean paramLoop = true;
 
     public Binaural(){};
 
@@ -38,7 +39,7 @@ public class Binaural{
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    public void config(int sessionID1, int sessionID2, int sessionID3, int sessionID4, float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String url, float volumeNoise) {
+    public void config(int sessionID1, int sessionID2, int sessionID3, int sessionID4, float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String url, float volumeNoise, boolean loop) {
 
         paramIsoBeatMax = isoBeatMax;
         paramIsoBeatMin = (isoBeatMin==0?0.1f:isoBeatMin);
@@ -47,6 +48,7 @@ public class Binaural{
         paramVolume = volume;
         paramDecreasing = decreasing;
         paramURL = url;
+        paramLoop = loop;
 
         sessionId1 = sessionID1;
         sessionId2 = sessionID2;
@@ -78,7 +80,7 @@ public class Binaural{
 
             player = new FilePlayer(
                     paramURL,
-                    Float.parseFloat(volumeNoise+""), (short)1, sessionId3, sessionId4);
+                    Float.parseFloat(volumeNoise+""), (short)1, sessionId3, sessionId4, this.paramLoop);
 
         }
     }

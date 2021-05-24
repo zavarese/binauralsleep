@@ -195,7 +195,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         float lastFreq = 0;
 
         if (!binaural.paramURL.equals("none")) {
-            binaural.player.play(true);
+            binaural.player.play();
         }
 
         if(binaural.paramDecreasing) {
