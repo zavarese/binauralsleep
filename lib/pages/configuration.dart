@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
+import 'config_list.dart';
+
 class ConfigPage extends StatefulWidget {
   int id;
   String name = "Teste";
@@ -149,30 +151,6 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                             function: setVolumeMusic
                         )
                     ),
-                    /*
-                    Container(
-                        width: 350,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[Theme(
-                            data: ThemeData(unselectedWidgetColor: Colors.blueGrey),
-                            child: Checkbox(value: decreasing,
-                                activeColor: Colors.blueGrey,
-                                checkColor: Colors.black,
-                                onChanged:(bool newValue){
-                                  setState(() {
-                                    decreasing = newValue;
-                                  });
-                                }),
-                          ),
-                            Text('Decreasing',
-                                textAlign: TextAlign.left,
-                                style: textStyle
-                            )
-                          ],
-                        )
-                    ),
-                    */
                     Padding(padding: const EdgeInsets.all(3.0)),
                     Row(
                       mainAxisAlignment:  MainAxisAlignment.center,
@@ -239,7 +217,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: 'save',
                                     active: false,
-                                    function: (isPlaying==false?fileBrowser:null)
+                                    function: (isPlaying==false?deleteConfig:null)
                                 ),
                               ),
                             ]
@@ -251,7 +229,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: 'delete',
                                     active: false,
-                                    function: (isPlaying==false?fileBrowser:null)
+                                    function: (isPlaying==false?deleteConfig:null)
                                 ),
                               ),
                             ]
@@ -319,6 +297,30 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
       response = "Failed to Invoke: '${e.message}'.";
     }
   }
+
+  Future<void> updateConfig() async {
+    String response = "";
+
+    //debugPrint("_loadedFile: "+_loadedFile);
+
+    try {
+      final String value = await platform.invokeMethod('update', <String, dynamic>{
+        'id': id,
+        'name': name,
+        'frequency': frequency.toString(),
+        'isoBeatMax': isoBeatMax.toString(),
+        'isoBeatMin': isoBeatMin.toString(),
+        'decreasing': decreasing.toString(),
+      });
+      response = value;
+    } on PlatformException catch (e) {
+      response = "Failed to Invoke: '${e.message}'.";
+    }
+
+    setState(() {_responseFromNativeCode = response;});
+  }
+
+  void deleteConfig(){}
 
 /*
   Future<void> getConfig() async{
@@ -409,27 +411,6 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
     } on PlatformException catch (e) {
       response = "Failed to Invoke: '${e.message}'.";
     }
-    setState(() {_responseFromNativeCode = response;});
-  }
-
-  Future<void> insert() async {
-    String response = "";
-
-    //debugPrint("_loadedFile: "+_loadedFile);
-
-    try {
-      final String value = await platform.invokeMethod('insert', <String, dynamic>{
-        'name': name,
-        'frequency': frequency.toString(),
-        'isoBeatMax': isoBeatMax.toString(),
-        'isoBeatMin': isoBeatMin.toString(),
-        'decreasing': decreasing.toString(),
-      });
-      response = value;
-    } on PlatformException catch (e) {
-      response = "Failed to Invoke: '${e.message}'.";
-    }
-
     setState(() {_responseFromNativeCode = response;});
   }
 
@@ -530,7 +511,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ListConfigPage()))
           ),
         ],
         title: Form(
