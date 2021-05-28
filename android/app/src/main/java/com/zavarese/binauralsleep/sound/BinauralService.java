@@ -144,13 +144,13 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
     private void executeAudio(AudioTrack audioCurr, AudioTrack audioNext, Binaural binaural, int minutes) {
         int seconds;
 
-        if(audioCurr!=null)audioCurr.setVolume(0.00001f);
         audioNext.play();
         Utils.sleepThread(50);
+        if(audioCurr!=null)audioCurr.setVolume(0.00001f);
+        Utils.sleepThread(35);
         audioNext.setVolume(0.1f);
         Utils.sleepThread(50);
         audioNext.setVolume(binaural.paramVolume / 2);
-
         Utils.sleepThread(50);
 
         if (audioCurr != null) {
@@ -160,10 +160,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
             audioCurr.release();
         }
 
-        Calendar c = Calendar.getInstance();
-        if (c.get(Calendar.SECOND) > 30) {
-            minutes++;
-        }
+        Calendar c;
 
         seconds = minutes * 60;
 

@@ -12,11 +12,11 @@ import 'config_list.dart';
 
 class ConfigPage extends StatefulWidget {
   int id;
-  String name = "Teste";
-  double isoBeatMin = 3;
-  double isoBeatMax = 16;
-  double frequency = 432;
-  bool decreasing = true;
+  String name;
+  double isoBeatMin;
+  double isoBeatMax;
+  double frequency;
+  bool decreasing;
   ConfigPage(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.frequency,this.decreasing);
   @override
   ConfigPageState createState() => new ConfigPageState(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.frequency,this.decreasing);
@@ -43,7 +43,6 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
   int _start;
   Timer _timer;
   var f = new NumberFormat("###.#", "en_US");
-  String preparedPlayer = "0";
 
   //File browser
   String loading = "0Hz";
@@ -52,9 +51,9 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
   File file;
 
   //Frequency slider bar default values
-  double freqMin = 100;
-  double freqMax = 600;
-  int division = 499;
+  double freqMin = 130;
+  double freqMax = 460;
+  int division = 329;
 
   //Execution status
   bool isPlaying = false;
@@ -217,7 +216,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: 'save',
                                     active: false,
-                                    function: (isPlaying==false?deleteConfig:null)
+                                    function: (isPlaying==false?(id==0?addConfig:updateConfig):null),
                                 ),
                               ),
                             ]
@@ -229,7 +228,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: 'delete',
                                     active: false,
-                                    function: (isPlaying==false?deleteConfig:null)
+                                    function: (isPlaying==false?(id==0?null:deleteConfig):null)
                                 ),
                               ),
                             ]
@@ -277,7 +276,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
     setState(() {
       freqMin = double.parse(min);
       freqMax = double.parse(max);
-      division = (freqMax - freqMin - 1).toInt();
+      division = freqMax.toInt() - freqMin.toInt() - 1;
     });
   }
 
@@ -287,7 +286,7 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
     try {
       final String value = await platform.invokeMethod('insert', <String, dynamic>{
         'name': name,
-        'frequency': frequency.toString(),
+        'frequency': frequency.toInt().toString(),
         'isoBeatMax': isoBeatMax.toString(),
         'isoBeatMin': isoBeatMin.toString(),
         'decreasing': decreasing.toString(),
@@ -301,13 +300,13 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
   Future<void> updateConfig() async {
     String response = "";
 
-    //debugPrint("_loadedFile: "+_loadedFile);
+    debugPrint("ID : "+id.toString());
 
     try {
       final String value = await platform.invokeMethod('update', <String, dynamic>{
         'id': id,
         'name': name,
-        'frequency': frequency.toString(),
+        'frequency': frequency.toInt().toString(),
         'isoBeatMax': isoBeatMax.toString(),
         'isoBeatMin': isoBeatMin.toString(),
         'decreasing': decreasing.toString(),
@@ -320,7 +319,18 @@ class ConfigPageState extends State<ConfigPage> with WidgetsBindingObserver  {
     setState(() {_responseFromNativeCode = response;});
   }
 
-  void deleteConfig(){}
+  Future<void> deleteConfig() async{
+    String response = "";
+
+    try {
+      final String value = await platform.invokeMethod('delete', <String, dynamic>{
+        'id': id,});
+      response = value;
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ListConfigPage()));
+    } on PlatformException catch (e) {
+      response = "Failed to Invoke: '${e.message}'.";
+    }
+  }
 
 /*
   Future<void> getConfig() async{

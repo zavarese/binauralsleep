@@ -97,9 +97,10 @@ public class MainActivity extends FlutterActivity {
                             break;
 
                         case "update" :
+                            System.out.println("ID = "+call.argument("id"));
                             configDAO.updateConfig(
                                     new Binaural(
-                                            Integer.parseInt(call.argument("id")),
+                                            call.argument("id"),
                                             call.argument("name"),
                                             Float.parseFloat(call.argument("frequency")),
                                             Float.parseFloat(call.argument("isoBeatMin")),
@@ -112,13 +113,13 @@ public class MainActivity extends FlutterActivity {
                             break;
 
                         case "delete" :
+                            configDAO.deleteConfig(call.argument("id"));
                             showMessage("Configuration deleted");
-                            configDAO.deleteConfig(Integer.parseInt(call.argument("id")));
                             result.success("");
                             break;
 
                         case "list" :
-                            result.success("");
+                            result.success(binaural.toJSON(configDAO.listConfig()));
                             break;
 
                         case "config" :
@@ -149,7 +150,7 @@ public class MainActivity extends FlutterActivity {
 
         //Gets the TextView from the Toast so it can be editted
         TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.BLACK);
+        text.setTextColor(Color.WHITE);
         text.setTypeface(null, Typeface.BOLD);
 
         toast.show();

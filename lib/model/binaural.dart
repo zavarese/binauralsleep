@@ -6,21 +6,10 @@ String modelUserToJson(List<Binaural> data) => json.encode(List<dynamic>.from(da
 class Binaural {
   int id;
   String name;
-  double isoBeatMin;
-  double isoBeatMax;
-  double frequency;
+  int isoBeatMin;
+  int isoBeatMax;
+  int frequency;
   bool decreasing;
-
-  /*
-  Binaural(Map<String, dynamic> data) {
-    id = data['id'];
-    name = data['name'];
-    isoBeatMin = data['isoBeatMin'];
-    isoBeatMax = data['isoBeatMax'];
-    frequency = data['frequency'];
-  }
-
-   */
 
   Binaural({
     this.id,

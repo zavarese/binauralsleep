@@ -6,18 +6,25 @@ import android.os.Build;
 
 import com.zavarese.binauralsleep.sound.FilePlayer;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Binaural{
 
-    public static int id;
-    public static String name;
-    public static float paramFrequency;
-    public static float paramIsoBeatMax;
-    public static float paramIsoBeatMin;
+    public int id;
+    public String name;
+    public float paramFrequency;
+    public float paramIsoBeatMax;
+    public float paramIsoBeatMin;
     public static float paramMinutes;
     public static float paramVolume;
     public static String paramURL;
-    public static boolean paramDecreasing;
+    public boolean paramDecreasing;
     public static Equalizer eq1;
     public static Equalizer eq2;
     public static FilePlayer player;
@@ -97,4 +104,30 @@ public class Binaural{
         return frequencyBand[1]/1000;
     }
 
+
+    public String toJSON(ArrayList<Binaural> list){
+        JSONObject jsonObject;
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+
+            for (int i = 0; i < list.size(); i++) {
+                jsonObject= new JSONObject();
+                jsonObject.put("id", ((Binaural)list.get(i)).id);
+                jsonObject.put("name", ((Binaural)list.get(i)).name);
+                jsonObject.put("isoBeatMin", ((Binaural)list.get(i)).paramIsoBeatMin);
+                jsonObject.put("isoBeatMax", ((Binaural)list.get(i)).paramIsoBeatMax);
+                jsonObject.put("frequency", ((Binaural)list.get(i)).paramFrequency);
+                jsonObject.put("decreasing", ((Binaural)list.get(i)).paramDecreasing);
+
+                jsonArray.put(jsonObject);
+            }
+
+            return jsonArray.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "";
+        }
+
+    }
 }

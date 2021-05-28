@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.zavarese.binauralsleep.sound.Binaural;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ConfigDAO {
@@ -55,11 +56,11 @@ public class ConfigDAO {
         return b;
     }
 
-    public List<Binaural> listConfig()
+    public ArrayList<Binaural> listConfig()
     {
         database = dbHelper.getReadableDatabase();
 
-        List<Binaural> contatos = new ArrayList<>();
+        ArrayList<Binaural> configs = new ArrayList<>();
 
         Cursor cursor;
 
@@ -71,7 +72,9 @@ public class ConfigDAO {
                 null,
                 SQLiteHelper.KEY_NOME);
 
-        while (cursor.moveToNext())
+        cursor.moveToFirst();
+
+        while (cursor.isAfterLast() == false)
         {
             Binaural b = new Binaural();
             b.id = cursor.getInt(0);
@@ -81,13 +84,14 @@ public class ConfigDAO {
             b.paramFrequency = cursor.getFloat(4);
             b.paramDecreasing = (cursor.getInt(5)==0?false:true);
 
-            contatos.add(b);
+            configs.add(b);
+            cursor.moveToNext();
         }
 
         cursor.close();
         database.close();
 
-        return contatos;
+        return configs;
     }
 
 
