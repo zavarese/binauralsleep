@@ -1,9 +1,12 @@
 import 'package:binauralsleep/model/binaural.dart';
 import 'package:binauralsleep/pages/configuration.dart';
+import 'package:binauralsleep/util/custom_search_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:binauralsleep/util/style.dart';
 import 'dart:convert';
+
+import 'config.dart';
 
 class ListConfigPage extends StatefulWidget {
   ListConfigPage({Key key, this.title}) : super(key: key);
@@ -141,7 +144,7 @@ class ListConfigPageState extends State<ListConfigPage> with WidgetsBindingObser
                     subtitle: (nDataList.decreasing
                       ?Text('Beat frequency: '+nDataList.isoBeatMax.toString()+'Hz to '+nDataList.isoBeatMin.toString()+'Hz',style: textStyleSmall,)
                       :Text('Beat frequency: '+nDataList.isoBeatMin.toString()+'Hz to '+nDataList.isoBeatMax.toString()+'Hz',style: textStyleSmall,)),
-                    trailing: Text(nDataList.frequency.toString(),
+                    trailing: Text(nDataList.frequency.toString()+"Hz",
                       style: textStyleMid,),
                   ),
                 ),

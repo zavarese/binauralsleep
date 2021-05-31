@@ -3,6 +3,7 @@ package com.zavarese.binauralsleep.sound;
 import android.annotation.TargetApi;
 import android.media.AudioAttributes;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -14,7 +15,6 @@ import java.util.Locale;
 
 public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
 
-    private static final int SAMPLE_RATE = 44100;
     private static float currentFrequency = 0;
     private static boolean isPlaying = true;
     private static int paramAction;   // 0 - nothing; 1 - stop; 2 - kill
@@ -84,11 +84,15 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         float freqLeft = binaural.paramFrequency - ((binaural.paramIsoBeatMax - decrease) / 2);
         float freqRight = binaural.paramFrequency + ((binaural.paramIsoBeatMax - decrease) / 2);
 
-        int amplitudeMax = Utils.getAdjustedAmplitudeMax(binaural.paramFrequency);
+        int sampleRate = AudioTrack.getNativeOutputSampleRate(AudioManager.STREAM_MUSIC);
+        int minSize = AudioTrack.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_OUT_STEREO,AudioFormat.ENCODING_PCM_16BIT);
+        //int amplitudeMax = Utils.getAmplitudeMax(minSize);
+
+        int amplitudeMax = Utils.getAdjustedAmplitudeMax(binaural.paramFrequency, minSize);
 
         //period of the sine waves
-        int sCountLeft = (int) ((float) SAMPLE_RATE / freqLeft);
-        int sCountRight = (int) ((float) SAMPLE_RATE / freqRight);
+        int sCountLeft = (int) ((float) sampleRate / freqLeft);
+        int sCountRight = (int) ((float) sampleRate / freqRight);
 
         int sampleCount = Utils.getLCM(sCountLeft, sCountRight) * 2;
 
@@ -102,7 +106,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
                 .setAudioFormat(new AudioFormat.Builder()
                         .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
                         .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setSampleRate(SAMPLE_RATE)
+                        .setSampleRate(sampleRate)
                         .build())
                 .setBufferSizeInBytes(buffSize)
                 .setTransferMode(AudioTrack.MODE_STATIC)
@@ -126,11 +130,11 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
             if (i / 2 % sCountLeft == 0) {
                 leftPhase = amplitude*-8;
             }
-            leftPhase += twopi * freqLeft / SAMPLE_RATE;
+            leftPhase += twopi * freqLeft / sampleRate;
             if (i / 2 % sCountRight == 0) {
                 rightPhase = amplitude*-8;
             }
-            rightPhase += twopi * freqRight / SAMPLE_RATE;
+            rightPhase += twopi * freqRight / sampleRate;
         }
 
         audioTrack.write(samples, 0, sampleCount);
@@ -147,15 +151,14 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         audioNext.play();
         Utils.sleepThread(50);
         if(audioCurr!=null)audioCurr.setVolume(0.00001f);
-        Utils.sleepThread(35);
-        audioNext.setVolume(0.1f);
+        audioNext.setVolume(0.05f);
         Utils.sleepThread(50);
-        audioNext.setVolume(binaural.paramVolume / 2);
+        audioNext.setVolume(binaural.paramVolume / 3);
         Utils.sleepThread(50);
 
         if (audioCurr != null) {
             audioCurr.pause();
-            while(audioCurr.getPlayState()==AudioTrack.PLAYSTATE_PLAYING)
+            Utils.sleepThread(50);
             audioCurr.flush();
             audioCurr.release();
         }

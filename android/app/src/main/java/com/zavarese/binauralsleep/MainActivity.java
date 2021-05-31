@@ -81,7 +81,7 @@ public class MainActivity extends FlutterActivity {
                             break;
 
                         case "insert" :
-                            configDAO.addConfig(
+                            long id = configDAO.addConfig(
                                     new Binaural(
                                             0,
                                             call.argument("name"),
@@ -93,7 +93,7 @@ public class MainActivity extends FlutterActivity {
 
                             //Toast.makeText(this, "Config added",2).show();
                             showMessage("Configuration created");
-                            result.success("");
+                            result.success(id+"");
                             break;
 
                         case "update" :

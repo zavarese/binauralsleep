@@ -1,6 +1,7 @@
 package com.zavarese.binauralsleep.sound;
 
 import android.annotation.TargetApi;
+import android.media.audiofx.AudioEffect;
 import android.media.audiofx.Equalizer;
 import android.os.Build;
 
@@ -36,6 +37,8 @@ public class Binaural{
 
     public Binaural(){};
 
+
+
     public Binaural(int id, String name, float frequency, float isoBeatMin, float isoBeatMax, boolean decreasing){
         this.id = id;
         this.name = name;
@@ -67,10 +70,32 @@ public class Binaural{
         short[] freqRange = eq1.getBandLevelRange();
         short minLvl = freqRange[0];
         short maxLvl = freqRange[1];
+        short band = 0;
+        short numBand = eq1.getNumberOfBands();
+        int frequencyEq = Math.round(paramFrequency);
 
         eq2 = new Equalizer(Integer.MAX_VALUE,sessionID2);
         eq2.setEnabled(true);
 
+        eq1.setBandLevel((short) 0, maxLvl);
+        eq2.setBandLevel((short) 0, maxLvl);
+
+        for(short i=1;i<numBand;i++){
+            if(frequencyEq>=getFreqMin(i) && frequencyEq<=getFreqMax(i)){
+                eq1.setBandLevel((short) i, maxLvl);
+                eq2.setBandLevel((short) i, maxLvl);
+                System.out.println("BandNum = "+i);
+                band = i;
+            }else{
+                eq1.setBandLevel((short) i, minLvl);
+                eq2.setBandLevel((short) i, minLvl);
+                System.out.println("BandNum = "+i);
+            }
+        }
+
+
+
+        /*
         eq1.setBandLevel((short) 0, maxLvl);
         eq1.setBandLevel((short) 1, maxLvl);
         eq1.setBandLevel((short) 2, minLvl);
@@ -83,14 +108,18 @@ public class Binaural{
         eq2.setBandLevel((short) 3, minLvl);
         eq2.setBandLevel((short) 4, minLvl);
 
+         */
+
         if (!paramURL.equals("none")) {
 
             player = new FilePlayer(
                     paramURL,
-                    Float.parseFloat(volumeNoise+""), (short)1, sessionId3, sessionId4, this.paramLoop);
+                    Float.parseFloat(volumeNoise+""), (short)band, sessionId3, sessionId4, this.paramLoop);
 
         }
     }
+
+
 
     public int getFreqMin(short channel){
         Equalizer eq = new Equalizer(Integer.MAX_VALUE,1);

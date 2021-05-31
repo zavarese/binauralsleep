@@ -4,18 +4,51 @@ import android.media.AudioTrack;
 
 public class Utils {
 
-    private static final int AMPLITUDE_MAX = 32767;
+    //private static final int AMPLITUDE_MAX = 32768;
 
-    public static int getAdjustedAmplitudeMax(float frequency) {
+    public static int getAdjustedAmplitudeMax(float frequency, int minSize) {
         //scale amplitude for human perception. 100hz or less = max
-        int amplitudeMax;
-        float amplitudeScale = 100 / frequency;
-        if (frequency <= 100)
-            amplitudeMax = AMPLITUDE_MAX;
-        else {
-            amplitudeMax = (int)(AMPLITUDE_MAX * amplitudeScale);
+
+        int amplitudeMax = getAmplitudeMax(minSize);
+        int amplitude = 0;
+
+        float amplitudeScale1 = 200 / frequency;
+        float amplitudeScale2 = 350 / frequency;
+
+        if (frequency <= 200){
+            amplitude = amplitudeMax;
         }
-        return amplitudeMax;
+
+        if (frequency > 200 && frequency <= 350){
+            amplitude = amplitudeMax/Math.round(amplitudeScale1);
+        }
+
+        if (frequency > 350 && frequency <= 400){
+            amplitude = amplitudeMax/Math.round(amplitudeScale2);
+        }
+
+        if (frequency > 400){
+            amplitude = amplitudeMax;
+        }
+
+        return amplitude;
+    }
+
+    public static int getAmplitudeMax(int minSize) {
+        // Find a suitable buffer size
+        int sizes[] = {1024, 2048, 4096, 8192, 16384, 32768};
+        int size = 0;
+
+        for (int s : sizes)
+        {
+            if (s > minSize)
+            {
+                size = s;
+                break;
+            }
+        }
+
+        return size;
     }
 
     public static int getLCM(int a,int b)

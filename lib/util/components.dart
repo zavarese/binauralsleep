@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:binauralsleep/util/style.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/src/foundation/diagnostics.dart';
 
+//*********** Customized Button ***********
 class ButtonCustom {
   const ButtonCustom({this.label,this.active,this.function});
   final String label;
@@ -11,7 +14,6 @@ class ButtonCustom {
 class ButtonCustomState extends StatelessWidget {
   const ButtonCustomState({Key key, this.button,}) : super(key: key);
   final ButtonCustom button;
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class ButtonCustomState extends StatelessWidget {
   }
 }
 
+//*********** Customized Slider Bar ***********
 class SliderCustom {
   const SliderCustom({this.value,this.valueMin,this.valueMax,this.division,this.function});
 
@@ -92,6 +95,85 @@ class SliderCustomState  extends StatelessWidget {
           label: sliderCustom.value.toInt().toString(),
           onChanged: sliderCustom.function,
         ),
+      ),
+    );
+  }
+}
+
+//*********** Customized App Bar ***********
+class AppBarCustom {
+  const AppBarCustom({this.formKey,this.name,this.label,this.function1,this.function2});
+
+  final GlobalKey<FormState> formKey;
+  final String name;
+  final String label;
+  final Function function1;
+  final Function function2;
+}
+
+class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
+
+  AppBarStateCustom({Key key, this.appBarCustom}) : super(key: key);
+  final AppBarCustom appBarCustom;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: appBarCustom.function1
+          ),
+        ],
+        title: Form(
+          key: appBarCustom.formKey,
+          child:TextFormField(
+            initialValue: appBarCustom.name,
+            inputFormatters: [new  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9]")),], //Letters and numbers only
+            keyboardType: TextInputType.text,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+            decoration: InputDecoration(
+                labelText: appBarCustom.label,
+                labelStyle: TextStyle(
+                  color: Colors.white,
+                )
+            ),
+            onChanged: appBarCustom.function2,
+          ),
+        )
+    );
+  }
+
+  @override
+  final Size preferredSize = Size.fromHeight(56.0);
+}
+
+class RangeSliderCustom {
+  const RangeSliderCustom({this.isoBeatMin,this.isoBeatMax,this.function});
+
+  final double isoBeatMin;
+  final double isoBeatMax;
+  final Function function;
+}
+
+class RangeSliderCustomState  extends StatelessWidget {
+  const RangeSliderCustomState({Key key, this.sliderCustom}) : super(key: key);
+  final RangeSliderCustom sliderCustom;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: RangeSlider(
+        divisions: 39,
+        min: 1.0,
+        max: 40.0,
+        values: RangeValues(sliderCustom.isoBeatMin, sliderCustom.isoBeatMax),
+        labels: RangeLabels(sliderCustom.isoBeatMin.toInt().toString(), sliderCustom.isoBeatMax.toInt().toString()),
+        onChanged: sliderCustom.function,
       ),
     );
   }
