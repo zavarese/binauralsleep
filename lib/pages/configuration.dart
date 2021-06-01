@@ -35,7 +35,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
             formKey: formKey,
             name: name,
             label: "Config name:",
-            function1: backList,
+            function1: backButton,
             function2: setName,
           ),
         ),
@@ -48,13 +48,14 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                 Column(
                   children: <Widget>[
                     Padding(padding: const EdgeInsets.all(8.0)),
+                    (loading=="loading..."?CircularProgressIndicator():
                     Text(
-                        (currFreq==""?loading:f.format(double.parse(currFreq))+"Hz"),
+                        f.format(double.parse(currFreq)).toString()+"Hz",
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 32)
-                    ),
+                    )),
                     Padding(padding: const EdgeInsets.all(5.0)),
                     Text(
                         (decreasing ? "Beat Frequency: "+isoBeatMax.toInt().toString()+"Hz to "+isoBeatMin.toInt().toString()+"Hz"
@@ -135,7 +136,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: (isPlaying ? "stop" : "play"),
                                     active: (isPlaying ? true : false),
-                                    function: playButton
+                                    function: (loading=="loading..."?null:playButton),
                                 ),
                               ),
                             ]
@@ -147,7 +148,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: 'music',
                                     active: (result==null?false:true),
-                                    function: (isPlaying==false?(loading == "0Hz"?(result==null?fileBrowser:setEmptyMusic):null):null),
+                                    function: (isPlaying==false?(loading == "0Hz"?(result==null?musicButton:setEmptyMusic):null):null),
                                 ),
                               ),
                             ]
@@ -159,7 +160,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: 'loop',
                                     active: (loop==true?true:false),
-                                    function: (isPlaying==false?setLoop:null),
+                                    function: (isPlaying==false?musicButton:null),
                                 ),
                               ),
                             ]
@@ -179,7 +180,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: (decreasing==true?'down':'up'),
                                     active: false,
-                                    function: (isPlaying==false?setDecreasing:null),
+                                    function: (isPlaying==false?upDownButton:null),
                                 ),
                               ),
                             ]
@@ -191,7 +192,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: 'save',
                                     active: false,
-                                    function: (isPlaying==false?(id==0?addConfig:updateConfig):null),
+                                    function: (isPlaying==true || loading=="loading..."?null:(id==0?saveInsertButton:saveUpdateButton)),
                                 ),
                               ),
                             ]
@@ -203,7 +204,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: 'delete',
                                     active: false,
-                                    function: (isPlaying==false?(id==0?null:deleteConfig):null)
+                                    function: (isPlaying==true || loading=="loading..."?null:(id==0?null:deleteButton))
                                 ),
                               ),
                             ]

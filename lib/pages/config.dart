@@ -36,14 +36,9 @@ class Config extends State  {
   FilePickerResult result;
   File file;
 
-  //Frequency slider bar default values
-  double freqMin = 130;
-  double freqMax = 460;
-  int division = 329;
-
   //Execution status
   bool isPlaying = false;
-  String currFreq = "";
+  String currFreq = "0";
   final formKey = new GlobalKey<FormState>();
 
   @override
@@ -61,64 +56,6 @@ class Config extends State  {
     super.initState();
   }
 
-  Future<void> addConfig() async {
-    String response = "";
-
-    debugPrint("insert ID : "+id.toString());
-
-    try {
-      final String value = await platform.invokeMethod('insert', <String, dynamic>{
-        'name': name,
-        'frequency': frequency.toInt().toString(),
-        'isoBeatMax': isoBeatMax.toString(),
-        'isoBeatMin': isoBeatMin.toString(),
-        'decreasing': decreasing.toString(),
-      });
-
-      response = value;
-
-    } on PlatformException catch (e) {
-      response = "Failed to Invoke: '${e.message}'.";
-    }
-
-    setState(() {id = int.parse(response);});
-  }
-
-  Future<void> updateConfig() async {
-    String response = "";
-
-    debugPrint("update ID : "+id.toString());
-
-    try {
-      final String value = await platform.invokeMethod('update', <String, dynamic>{
-        'id': id,
-        'name': name,
-        'frequency': frequency.toInt().toString(),
-        'isoBeatMax': isoBeatMax.toString(),
-        'isoBeatMin': isoBeatMin.toString(),
-        'decreasing': decreasing.toString(),
-      });
-      response = value;
-    } on PlatformException catch (e) {
-      response = "Failed to Invoke: '${e.message}'.";
-    }
-
-    setState(() {_responseFromNativeCode = response;});
-  }
-
-  Future<void> deleteConfig() async{
-    String response = "";
-
-    try {
-      final String value = await platform.invokeMethod('delete', <String, dynamic>{
-        'id': id,});
-      response = value;
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ListConfigPage()));
-    } on PlatformException catch (e) {
-      response = "Failed to Invoke: '${e.message}'.";
-    }
-  }
-
   @override
   void didChangeDependencies(){
     super.didChangeDependencies();
@@ -127,24 +64,6 @@ class Config extends State  {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  //To get mp3 or wav files
-  Future<void> fileBrowser() async {
-    setState(() {loading = "loading...";});
-
-    result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['mp3', 'wav'],
-    );
-
-    //result = await FilePicker.platform.getDirectoryPath();
-
-    if(result != null) {
-      file = File(result.files.single.path);
-    }
-
-    setState(() {loading = "0Hz";});
   }
 
   //Play configuration
@@ -189,7 +108,7 @@ class Config extends State  {
       response = "Failed to Invoke: '${e.message}'.";
     }
     setState(() {
-      currFreq = "";
+      currFreq = "0";
       _responseFromNativeCode = response;
     });
 
@@ -252,25 +171,84 @@ class Config extends State  {
     );
   }
 
-  void setRangeFreqValues(values){
-    setState(() {
-      if (values.start + 1 > values.end) {
-        values = RangeValues(isoBeatMin, isoBeatMin + 1);
-      }else {
-        isoBeatMin = values.start;
-        isoBeatMax = values.end;
-      }
-    });
+  Future<void> saveInsertButton() async {
+    String response = "";
+
+    debugPrint("insert ID : "+id.toString());
+
+    try {
+      final String value = await platform.invokeMethod('insert', <String, dynamic>{
+        'name': name,
+        'frequency': frequency.toInt().toString(),
+        'isoBeatMax': isoBeatMax.toString(),
+        'isoBeatMin': isoBeatMin.toString(),
+        'decreasing': decreasing.toString(),
+      });
+
+      response = value;
+
+    } on PlatformException catch (e) {
+      response = "Failed to Invoke: '${e.message}'.";
+    }
+
+    setState(() {id = int.parse(response);});
   }
 
-  void backList(){
+  Future<void> saveUpdateButton() async {
+    String response = "";
+
+    debugPrint("update ID : "+id.toString());
+
+    try {
+      final String value = await platform.invokeMethod('update', <String, dynamic>{
+        'id': id,
+        'name': name,
+        'frequency': frequency.toInt().toString(),
+        'isoBeatMax': isoBeatMax.toString(),
+        'isoBeatMin': isoBeatMin.toString(),
+        'decreasing': decreasing.toString(),
+      });
+      response = value;
+    } on PlatformException catch (e) {
+      response = "Failed to Invoke: '${e.message}'.";
+    }
+
+    setState(() {_responseFromNativeCode = response;});
+  }
+
+  Future<void> deleteButton() async{
+    String response = "";
+
+    try {
+      final String value = await platform.invokeMethod('delete', <String, dynamic>{
+        'id': id,});
+      response = value;
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ListConfigPage()));
+    } on PlatformException catch (e) {
+      response = "Failed to Invoke: '${e.message}'.";
+    }
+  }
+
+  //To get mp3 or wav files
+  Future<void> musicButton() async {
+    setState(() {loading = "loading...";});
+
+    result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['mp3', 'wav'],
+    );
+
+    //result = await FilePicker.platform.getDirectoryPath();
+
+    if(result != null) {
+      file = File(result.files.single.path);
+    }
+
+    setState(() {loading = "0Hz";});
+  }
+
+  void backButton(){
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ListConfigPage()));
-  }
-
-  void setName(text){
-    setState(() {
-      name = text;
-    });
   }
 
   //Play float button
@@ -288,6 +266,43 @@ class Config extends State  {
         }
       });
     }
+  }
+
+  void loopButton(){
+    setState(() {
+      if (loop == true) {
+        loop = false;
+      } else {
+        loop = true;
+      }
+    });
+  }
+
+  void upDownButton(){
+    setState(() {
+      if (decreasing == true) {
+        decreasing = false;
+      } else {
+        decreasing = true;
+      }
+    });
+  }
+
+  void setRangeFreqValues(values){
+    setState(() {
+      if (values.start + 1 > values.end) {
+        values = RangeValues(isoBeatMin, isoBeatMin + 1);
+      }else {
+        isoBeatMin = values.start;
+        isoBeatMax = values.end;
+      }
+    });
+  }
+
+  void setName(text){
+    setState(() {
+      name = text;
+    });
   }
 
   void setFrequency(double value){
@@ -323,26 +338,6 @@ class Config extends State  {
         result = null;
       });
     }
-  }
-
-  void setDecreasing(){
-    setState(() {
-      if (decreasing == true) {
-        decreasing = false;
-      } else {
-        decreasing = true;
-      }
-    });
-  }
-
-  void setLoop(){
-    setState(() {
-      if (loop == true) {
-        loop = false;
-      } else {
-        loop = true;
-      }
-    });
   }
 
 }

@@ -6,7 +6,7 @@ TextStyle textStyle = TextStyle(
   fontSize: 14,
 );
 TextStyle textStyleSmall = TextStyle(
-  color: Colors.black,
+  color: Colors.grey,
   fontWeight: FontWeight.bold,
   fontSize: 14,
 );

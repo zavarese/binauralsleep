@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:binauralsleep/util/style.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/foundation/diagnostics.dart';
 
 //*********** Customized Button ***********
 class ButtonCustom {
@@ -26,7 +24,7 @@ class ButtonCustomState extends StatelessWidget {
       colorBorder = Colors.grey;
       colorText = Colors.black;
     }else{
-      colorBackground = Colors.black;
+      colorBackground = Color.fromRGBO(28, 27, 27, 1);
       colorBorder = Colors.grey;
       colorText = Colors.grey;
     }
@@ -121,7 +119,7 @@ class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
     return AppBar(
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
+              icon: Icon(Icons.arrow_back, color: Color.fromRGBO(189, 184, 184, 1)),
               onPressed: appBarCustom.function1
           ),
         ],
@@ -138,7 +136,7 @@ class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
             decoration: InputDecoration(
                 labelText: appBarCustom.label,
                 labelStyle: TextStyle(
-                  color: Colors.white,
+                  color: Color.fromRGBO(189, 184, 184, 1),
                 )
             ),
             onChanged: appBarCustom.function2,
@@ -151,6 +149,7 @@ class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
   final Size preferredSize = Size.fromHeight(56.0);
 }
 
+//*********** Customized Range Slider ***********
 class RangeSliderCustom {
   const RangeSliderCustom({this.isoBeatMin,this.isoBeatMax,this.function});
 

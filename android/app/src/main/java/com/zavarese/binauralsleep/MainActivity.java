@@ -1,18 +1,23 @@
 package com.zavarese.binauralsleep;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.zavarese.binauralsleep.dao.ConfigDAO;
 import com.zavarese.binauralsleep.sound.Binaural;
 import com.zavarese.binauralsleep.sound.BinauralService;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
