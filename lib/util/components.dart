@@ -100,13 +100,15 @@ class SliderCustomState  extends StatelessWidget {
 
 //*********** Customized App Bar ***********
 class AppBarCustom {
-  const AppBarCustom({this.formKey,this.name,this.label,this.function1,this.function2});
+  const AppBarCustom({this.formKey,this.name,this.label,this.icon,this.controller,this.iconBtnFunction,this.inputTxtFunction});
 
   final GlobalKey<FormState> formKey;
   final String name;
   final String label;
-  final Function function1;
-  final Function function2;
+  final IconData icon;
+  final TextEditingController controller;
+  final Function iconBtnFunction;
+  final Function inputTxtFunction;
 }
 
 class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
@@ -119,13 +121,14 @@ class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
     return AppBar(
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.arrow_back, color: Color.fromRGBO(189, 184, 184, 1)),
-              onPressed: appBarCustom.function1
+              icon: Icon(appBarCustom.icon, color: Color.fromRGBO(189, 184, 184, 1)),
+              onPressed: appBarCustom.iconBtnFunction
           ),
         ],
         title: Form(
           key: appBarCustom.formKey,
           child:TextFormField(
+            controller: appBarCustom.controller,
             initialValue: appBarCustom.name,
             inputFormatters: [new  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9]")),], //Letters and numbers only
             keyboardType: TextInputType.text,
@@ -137,9 +140,10 @@ class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
                 labelText: appBarCustom.label,
                 labelStyle: TextStyle(
                   color: Color.fromRGBO(189, 184, 184, 1),
+                  fontStyle: FontStyle.italic,
                 )
             ),
-            onChanged: appBarCustom.function2,
+            onChanged: appBarCustom.inputTxtFunction,
           ),
         )
     );

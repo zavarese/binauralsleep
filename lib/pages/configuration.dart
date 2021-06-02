@@ -34,9 +34,10 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
           appBarCustom: AppBarCustom(
             formKey: formKey,
             name: name,
+            icon: Icons.arrow_back,
             label: "Config name:",
-            function1: backButton,
-            function2: setName,
+            iconBtnFunction: backButton,
+            inputTxtFunction: setName,
           ),
         ),
         backgroundColor: Colors.black,

@@ -1,12 +1,10 @@
 import 'package:binauralsleep/model/binaural.dart';
 import 'package:binauralsleep/pages/configuration.dart';
-import 'package:binauralsleep/util/custom_search_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:binauralsleep/util/style.dart';
 import 'dart:convert';
-
-import 'config.dart';
+import 'package:binauralsleep/util/components.dart';
 
 class ListConfigPage extends StatefulWidget {
   ListConfigPage({Key key, this.title}) : super(key: key);
@@ -15,16 +13,19 @@ class ListConfigPage extends StatefulWidget {
   ListConfigPageState createState() => new ListConfigPageState();
 }
 
-class ListConfigPageState extends State<ListConfigPage> with WidgetsBindingObserver {
+class ListConfigPageState extends State<ListConfigPage> {
   static const platform = const MethodChannel('com.zavarese.binauralsleep/binaural');
-  List<Binaural> listModel = [];
+  static final List<Binaural> listModel = [];
+  List<Binaural> _searchResult = [];
+
   var loading = false;
+  final formKey = new GlobalKey<FormState>();
+  TextEditingController controller = new TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     getData();
+    super.initState();
   }
 
   Future<Null> getData() async {
@@ -43,6 +44,10 @@ class ListConfigPageState extends State<ListConfigPage> with WidgetsBindingObser
         for(Map i in data){
           listModel.add(Binaural.fromJson(i));
         }
+
+        for(Map i in data){
+          _searchResult.add(Binaural.fromJson(i));
+        }
         loading = false;
       });
 
@@ -53,29 +58,21 @@ class ListConfigPageState extends State<ListConfigPage> with WidgetsBindingObser
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,]);
 
     return Scaffold(
         backgroundColor: Colors.black,
-        appBar:  AppBar(
-          actions: <Widget>[
-            IconButton(
-              color: Color.fromRGBO(189, 184, 184, 1),
-              onPressed: (){
-                showSearch(context: context, delegate: CustomSearchDelegate(listModel));
-              },
-              icon: Icon(Icons.search),
-            )
-          ],
-        centerTitle:false,
-        title: Text('Binaural configurations',
-          style: TextStyle(
-            color: Color.fromRGBO(189, 184, 184, 1),),
+        appBar: AppBarStateCustom(
+          appBarCustom: AppBarCustom(
+            formKey: formKey,
+            label: "search",
+            icon: Icons.search,
+            controller: controller,
+            inputTxtFunction: onSearchTextChanged
+          ),
         ),
-    ),
     floatingActionButton:  FloatingActionButton(
         onPressed: () {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",3,16,432,true)));
@@ -85,9 +82,9 @@ class ListConfigPageState extends State<ListConfigPage> with WidgetsBindingObser
         foregroundColor: Color.fromRGBO(189, 184, 184, 1),
     ),
     body: loading ? Center (child: CircularProgressIndicator()) :ListView.builder(
-    itemCount: listModel.length,
+    itemCount: _searchResult.length,
     itemBuilder: (context, i) {
-      final nDataList = listModel[i];
+      Binaural nDataList = _searchResult[i];
       return Card(
             color: Colors.black,
             child: InkWell(
@@ -135,6 +132,35 @@ class ListConfigPageState extends State<ListConfigPage> with WidgetsBindingObser
       )
     );
   }
+
+  onSearchTextChanged(String text) async {
+
+    _searchResult.clear();
+
+    if (text.isEmpty) {
+      setState(()
+      {
+        for (int i = 0; i < listModel.length; i++) {
+          _searchResult.add(listModel[i]);
+        }
+      });
+      return;
+    }
+
+    //debugPrint("length: "+listModel.length.toString());
+
+    listModel.forEach((binaural) {
+      if (binaural.name.toLowerCase().contains(text.toLowerCase()) ||
+          binaural.frequency.toString().toLowerCase().contains(text.toLowerCase()) ||
+          binaural.isoBeatMin.toString().toLowerCase().contains(text.toLowerCase()) ||
+          binaural.isoBeatMax.toString().toLowerCase().contains(text.toLowerCase()))
+      {
+          _searchResult.add(binaural);
+      }
+    });
+
+    setState(() {});
+  }
 }
 
 String greekLatter(int beatMin){
@@ -161,95 +187,4 @@ String greekLatter(int beatMin){
   }
 
   return greek;
-}
-
-class CustomSearchDelegate extends SearchDelegate {
-  List<Binaural> listModel = [];
-  CustomSearchDelegate(this.listModel);
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    // TODO: implement buildActions
-    return <Widget>[
-      IconButton(
-        icon: Icon(Icons.close),
-        onPressed: (){
-          query = "";
-        },
-      )
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: AnimatedIcon(
-        icon: AnimatedIcons.menu_arrow,
-        progress: transitionAnimation,
-      ),
-      onPressed: (){
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-
-    return ListView.builder(
-      itemCount: listModel.length,
-      itemBuilder: (context, i) {
-        final nDataList = listModel[i];
-        return Card(
-            color: Colors.black,
-            child: InkWell(
-              onTap: () {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) =>
-                    ConfigPage(
-                      nDataList.id,
-                      nDataList.name,
-                      double.parse(nDataList.isoBeatMin.toString()),
-                      double.parse(nDataList.isoBeatMax.toString()),
-                      double.parse(nDataList.frequency.toString()),
-                      nDataList.decreasing,
-                    )
-                ));
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Color.fromRGBO(28, 27, 27, 1),
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(10))
-                ),
-                width: MediaQuery.of(context).size.width,
-                height: 80,
-                child: Center(
-                  child: ListTile(
-                    leading: Text(greekLatter((nDataList.decreasing?nDataList.isoBeatMin:nDataList.isoBeatMax)),
-                      style: textStyleBig,
-                    ),
-                    title: Text(nDataList.name,
-                      style: textStyleMid,
-                    ),
-                    subtitle: (nDataList.decreasing
-                        ?Text('Beat frequency: '+nDataList.isoBeatMax.toString()+'Hz to '+nDataList.isoBeatMin.toString()+'Hz',style: textStyleSmall,)
-                        :Text('Beat frequency: '+nDataList.isoBeatMin.toString()+'Hz to '+nDataList.isoBeatMax.toString()+'Hz',style: textStyleSmall,)),
-                    trailing: Text(nDataList.frequency.toString()+"Hz",
-                      style: textStyleMid,),
-                  ),
-                ),
-              ),
-            )
-        );},
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    return null;
-  }
 }

@@ -93,23 +93,6 @@ public class Binaural{
             }
         }
 
-
-
-        /*
-        eq1.setBandLevel((short) 0, maxLvl);
-        eq1.setBandLevel((short) 1, maxLvl);
-        eq1.setBandLevel((short) 2, minLvl);
-        eq1.setBandLevel((short) 3, minLvl);
-        eq1.setBandLevel((short) 4, minLvl);
-
-        eq2.setBandLevel((short) 0, maxLvl);
-        eq2.setBandLevel((short) 1, maxLvl);
-        eq2.setBandLevel((short) 2, minLvl);
-        eq2.setBandLevel((short) 3, minLvl);
-        eq2.setBandLevel((short) 4, minLvl);
-
-         */
-
         if (!paramURL.equals("none")) {
 
             player = new FilePlayer(
