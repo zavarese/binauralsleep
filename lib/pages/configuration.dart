@@ -10,16 +10,18 @@ class ConfigPage extends StatefulWidget {
   String name;
   double isoBeatMin;
   double isoBeatMax;
+  String waveMin;
+  String waveMax;
   double frequency;
   bool decreasing;
-  ConfigPage(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.frequency,this.decreasing);
+  ConfigPage(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.frequency,this.decreasing);
   @override
-  Config createState() => new ConfigPageState(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.frequency,this.decreasing);
+  Config createState() => new ConfigPageState(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.frequency,this.decreasing);
 }
 
 class ConfigPageState extends Config with WidgetsBindingObserver  {
 
-  ConfigPageState(int id, String name, double isoBeatMin, double isoBeatMax, double frequency, bool decreasing) : super(id, name, isoBeatMin, isoBeatMax, frequency, decreasing);
+  ConfigPageState(int id, String name, double isoBeatMin, double isoBeatMax, String waveMin, String waveMax, double frequency, bool decreasing) : super(id, name, isoBeatMin, isoBeatMax, waveMin, waveMax, frequency, decreasing);
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
         backgroundColor: Colors.black,
         body: Column(
           children: <Widget>[
+
             Row(
               mainAxisAlignment:  MainAxisAlignment.center,
               children: <Widget>[

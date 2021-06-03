@@ -32,7 +32,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
         ),
     floatingActionButton:  FloatingActionButton(
         onPressed: () {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",3,16,432,true)));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",3,16,"","",432,true)));
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blueGrey,
@@ -53,6 +53,8 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                       nDataList.name,
                       double.parse(nDataList.isoBeatMin.toString()),
                       double.parse(nDataList.isoBeatMax.toString()),
+                      nDataList.waveMin,
+                      nDataList.waveMax,
                       double.parse(nDataList.frequency.toString()),
                       nDataList.decreasing,
                     )
@@ -74,12 +76,13 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                       style: textStyleBig,
                     ),
                     title: Text(nDataList.name,
+                      overflow: TextOverflow.ellipsis,
                       style: textStyleMid,
                     ),
                     subtitle: (nDataList.decreasing
-                      ?Text('Beat frequency: '+nDataList.isoBeatMax.toString()+'Hz to '+nDataList.isoBeatMin.toString()+'Hz',
+                      ?Text(nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz] to '+nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz]',
                           style: textStyleSmall,)
-                      :Text('Beat frequency: '+nDataList.isoBeatMin.toString()+'Hz to '+nDataList.isoBeatMax.toString()+'Hz',
+                      :Text(nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz] to '+nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz]',
                           style: textStyleSmall,)),
                     trailing: Text(nDataList.frequency.toString()+"Hz",
                       style: textStyleMid,),

@@ -15,13 +15,15 @@ class Config extends State  {
   double isoBeatMin;
   double isoBeatMax;
   double frequency;
+  String waveMin;
+  String waveMax;
   bool decreasing;
   double minutes = sharedPrefs.minutes;
   double volumeMusic = sharedPrefs.volumeMusic;
   double volumeWaves = sharedPrefs.volumeWaves;
   bool loop = true;
 
-  Config(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.frequency,this.decreasing);
+  Config(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.frequency,this.decreasing);
 
   static const platform = const MethodChannel('com.zavarese.binauralsleep/binaural');
   String _responseFromNativeCode = '';
@@ -99,7 +101,7 @@ class Config extends State  {
 
   Future<String> _stop() async {
     String response = "";
-    result = null;
+    //result = null;
 
     try {
       final String value = await platform.invokeMethod('stop');

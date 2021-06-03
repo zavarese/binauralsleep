@@ -77,8 +77,8 @@ class ListConfig extends State  {
     _listModel.forEach((binaural) {
       if (binaural.name.toLowerCase().contains(text.toLowerCase()) ||
           binaural.frequency.toString().toLowerCase().contains(text.toLowerCase()) ||
-          binaural.isoBeatMin.toString().toLowerCase().contains(text.toLowerCase()) ||
-          binaural.isoBeatMax.toString().toLowerCase().contains(text.toLowerCase()))
+          binaural.waveMin.toString().toLowerCase().contains(text.toLowerCase()) ||
+          binaural.waveMax.toString().toLowerCase().contains(text.toLowerCase()))
       {
         searchResult.add(binaural);
       }

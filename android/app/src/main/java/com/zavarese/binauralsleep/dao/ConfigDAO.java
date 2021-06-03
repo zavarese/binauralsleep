@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.zavarese.binauralsleep.Utils.waveWord;
+
 public class ConfigDAO {
 
     SQLiteDatabase database;
@@ -83,6 +85,8 @@ public class ConfigDAO {
             b.paramIsoBeatMax = cursor.getFloat(3);
             b.paramFrequency = cursor.getFloat(4);
             b.paramDecreasing = (cursor.getInt(5)==0?false:true);
+            b.waveMin = waveWord(b.paramIsoBeatMin);
+            b.waveMax = waveWord(b.paramIsoBeatMax);
 
             configs.add(b);
             cursor.moveToNext();

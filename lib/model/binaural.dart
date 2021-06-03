@@ -8,6 +8,8 @@ class Binaural {
   String name;
   int isoBeatMin;
   int isoBeatMax;
+  String waveMin;
+  String waveMax;
   int frequency;
   bool decreasing;
 
@@ -16,6 +18,8 @@ class Binaural {
     this.name,
     this.isoBeatMin,
     this.isoBeatMax,
+    this.waveMin,
+    this.waveMax,
     this.frequency,
     this.decreasing
   });
@@ -25,6 +29,8 @@ class Binaural {
     name: json["name"],
     isoBeatMin: json["isoBeatMin"],
     isoBeatMax: json["isoBeatMax"],
+    waveMin: json["waveMin"],
+    waveMax: json["waveMax"],
     frequency: json["frequency"],
     decreasing: json["decreasing"],
   );
@@ -34,6 +40,8 @@ class Binaural {
     "name": name,
     "isoBeatMin": isoBeatMin,
     "isoBeatMax": isoBeatMax,
+    "waveMin": waveMin,
+    "waveMax": waveMax,
     "frequency": frequency,
     "decreasing": decreasing,
   };

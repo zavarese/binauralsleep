@@ -89,6 +89,33 @@ public class Utils {
             ex.printStackTrace();
         }
     }
+
+    public static String waveWord(float freq){
+        String word="";
+        System.out.println("freq = "+freq);
+
+        if(freq<=4){
+            word = "Delta";
+        }
+
+        if(freq>4 && freq<=8){
+            word = "Theta";
+        }
+
+        if(freq>8 && freq<=12){
+            word = "Alpha";
+        }
+
+        if(freq>12 && freq<=35){
+            word = "Beta";
+        }
+
+        if(freq>35){
+            word = "Gamma";
+        }
+
+        return word;
+    }
 }
 
 

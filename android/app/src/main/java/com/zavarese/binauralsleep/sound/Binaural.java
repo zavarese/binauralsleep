@@ -1,18 +1,13 @@
 package com.zavarese.binauralsleep.sound;
 
 import android.annotation.TargetApi;
-import android.media.audiofx.AudioEffect;
 import android.media.audiofx.Equalizer;
 import android.os.Build;
-
-import com.zavarese.binauralsleep.sound.FilePlayer;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
+import static com.zavarese.binauralsleep.Utils.*;
 
 
 public class Binaural{
@@ -22,6 +17,8 @@ public class Binaural{
     public float paramFrequency;
     public float paramIsoBeatMax;
     public float paramIsoBeatMin;
+    public String waveMin;
+    public String waveMax;
     public static float paramMinutes;
     public static float paramVolume;
     public static String paramURL;
@@ -39,13 +36,15 @@ public class Binaural{
 
 
 
-    public Binaural(int id, String name, float frequency, float isoBeatMin, float isoBeatMax, boolean decreasing){
+    public Binaural(int id, String name, float frequency, float isoBeatMin,  float isoBeatMax, boolean decreasing){
         this.id = id;
         this.name = name;
         this.paramFrequency = frequency;
         this.paramIsoBeatMin = isoBeatMin;
         this.paramIsoBeatMax = isoBeatMax;
         this.paramDecreasing = decreasing;
+        this.waveMin = waveWord(isoBeatMin);
+        this.waveMax = waveWord(isoBeatMax);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -129,6 +128,8 @@ public class Binaural{
                 jsonObject.put("name", ((Binaural)list.get(i)).name);
                 jsonObject.put("isoBeatMin", ((Binaural)list.get(i)).paramIsoBeatMin);
                 jsonObject.put("isoBeatMax", ((Binaural)list.get(i)).paramIsoBeatMax);
+                jsonObject.put("waveMin", ((Binaural)list.get(i)).waveMin);
+                jsonObject.put("waveMax", ((Binaural)list.get(i)).waveMax);
                 jsonObject.put("frequency", ((Binaural)list.get(i)).paramFrequency);
                 jsonObject.put("decreasing", ((Binaural)list.get(i)).paramDecreasing);
 
