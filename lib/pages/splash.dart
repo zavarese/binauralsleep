@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:binauralsleep/pages/config_list.dart';
-import 'package:binauralsleep/pages/configuration.dart';
 import 'package:flutter/services.dart';
 
 class Splash extends StatefulWidget {
