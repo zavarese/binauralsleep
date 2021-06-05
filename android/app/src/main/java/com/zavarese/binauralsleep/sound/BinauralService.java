@@ -8,8 +8,10 @@ import android.media.AudioTrack;
 import android.os.AsyncTask;
 import android.os.Build;
 
+import com.zavarese.binauralsleep.MainActivity;
 import com.zavarese.binauralsleep.Utils;
 
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -21,7 +23,11 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
     AudioTrack audioTrack1;
     AudioTrack audioTrack2;
     private static final int LAST_MINUTES = 10;
+    private WeakReference<MainActivity> mActivity;
 
+    public BinauralService(MainActivity activity){
+        mActivity = new WeakReference<MainActivity>(activity);
+    }
 
     public void stop(Binaural binaural, int action) {
         currentFrequency = 0;
@@ -178,12 +184,15 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
                 Utils.sleepThread(1000);
             }
 
-            if (seconds == 0) {
-                Utils.sleepThread(1000);
-                break;
-            }
+        } while (seconds>0);
+    }
 
-        } while (true);
+    public float getCurrentFrequency(){
+        return currentFrequency;
+    }
+
+    public boolean isPlaying(){
+        return this.isPlaying;
     }
 
     @Override
@@ -194,16 +203,14 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         paramAction = 0;
         float lastFreq = 0;
 
-        if (!binaural.paramURL.equals("none")) {
+        if (!binaural.paramPath.equals("none")) {
             binaural.player.play();
         }
 
         if(binaural.paramDecreasing) {
-            System.out.println("**** Decreasing ****");
             for (float freq = 0f; freq <= freqEnd; freq = freq + increment(binaural)) {
                 freq = Float.parseFloat(String.format(Locale.US, "%.2f", freq));
                 currentFrequency = binaural.paramIsoBeatMax - freq;
-                System.out.println("freq = " + freq);
 
                 if (audioTrack1 != null && audioTrack1.getPlayState() == AudioTrack.PLAYSTATE_PLAYING){
                     audioTrack2 = wavesBuilder(binaural, binaural.sessionId2, freq, -1);
@@ -218,7 +225,6 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
                     }
                 }
 
-                System.out.println("paramAction = " + paramAction);
 
                 if (paramAction == 1) {
                     break;
@@ -231,7 +237,6 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
                 lastFreq = freq;
             }
         }else{
-            System.out.println("**** Increasing ****");
             for (float freq = freqEnd; freq > 0f; freq = freq - increment(binaural)) {
                 freq = Float.parseFloat(String.format(Locale.US, "%.2f", freq));
                 currentFrequency = binaural.paramIsoBeatMax - freq;
@@ -283,7 +288,6 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         return paramAction;
     }
 
-    /*
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -292,18 +296,23 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         }
     }
 
-     */
-
     protected void onProgressUpdate(Void... values){
-        super.onProgressUpdate();
+
+        super.onProgressUpdate(values);
+
+        if ( mActivity.get() == null ||  mActivity.get().isFinishing()) {
+            return;
+        }
     }
 
-    public float getCurrentFrequency(){
-        return currentFrequency;
-    }
+    @Override
+    protected void onPostExecute(Integer i) {
+        super.onPostExecute(i);
 
-    public boolean isPlaying(){
-        return this.isPlaying;
+        if (mActivity.get() == null || mActivity.get().isFinishing()) {
+            return;
+        }
+
     }
 
 }

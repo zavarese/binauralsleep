@@ -54,11 +54,12 @@ public class MainActivity extends FlutterActivity {
                                     Float.parseFloat(call.argument("minutes")),
                                     Float.parseFloat(call.argument("volumeWave"))/10,
                                     Boolean.parseBoolean(call.argument("decreasing")),
-                                    call.argument("url"),
+                                    call.argument("path"),
                                     Float.parseFloat(call.argument("volumeNoise"))/10,
                                     Boolean.parseBoolean(call.argument("loop"))
                                     );
-                            wave = new BinauralService();
+
+                            wave = new BinauralService(this);
                             wave.execute(binaural);
 
                             result.success("");
@@ -93,7 +94,8 @@ public class MainActivity extends FlutterActivity {
                                             Float.parseFloat(call.argument("frequency")),
                                             Float.parseFloat(call.argument("isoBeatMin")),
                                             Float.parseFloat(call.argument("isoBeatMax")),
-                                            Boolean.parseBoolean(call.argument("decreasing"))
+                                            Boolean.parseBoolean(call.argument("decreasing")),
+                                            call.argument("path")
                             ));
 
                             //Toast.makeText(this, "Config added",2).show();
@@ -102,7 +104,6 @@ public class MainActivity extends FlutterActivity {
                             break;
 
                         case "update" :
-                            System.out.println("ID = "+call.argument("id"));
                             configDAO.updateConfig(
                                     new Binaural(
                                             call.argument("id"),
@@ -110,7 +111,8 @@ public class MainActivity extends FlutterActivity {
                                             Float.parseFloat(call.argument("frequency")),
                                             Float.parseFloat(call.argument("isoBeatMin")),
                                             Float.parseFloat(call.argument("isoBeatMax")),
-                                            Boolean.parseBoolean(call.argument("decreasing"))
+                                            Boolean.parseBoolean(call.argument("decreasing")),
+                                            call.argument("path")
                             ));
 
                             showMessage("Configuration updated");

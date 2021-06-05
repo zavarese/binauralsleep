@@ -12,16 +12,17 @@ class ConfigPage extends StatefulWidget {
   double isoBeatMax;
   String waveMin;
   String waveMax;
+  String path;
   double frequency;
   bool decreasing;
-  ConfigPage(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.frequency,this.decreasing);
+  ConfigPage(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing);
   @override
-  Config createState() => new ConfigPageState(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.frequency,this.decreasing);
+  Config createState() => new ConfigPageState(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing);
 }
 
 class ConfigPageState extends Config with WidgetsBindingObserver  {
 
-  ConfigPageState(int id, String name, double isoBeatMin, double isoBeatMax, String waveMin, String waveMax, double frequency, bool decreasing) : super(id, name, isoBeatMin, isoBeatMax, waveMin, waveMax, frequency, decreasing);
+  ConfigPageState(int id, String name, double isoBeatMin, double isoBeatMax, String waveMin, String waveMax, String path, double frequency, bool decreasing) : super(id, name, isoBeatMin, isoBeatMax, waveMin, waveMax, path, frequency, decreasing);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,6 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
         backgroundColor: Colors.black,
         body: Column(
           children: <Widget>[
-
             Row(
               mainAxisAlignment:  MainAxisAlignment.center,
               children: <Widget>[
@@ -151,8 +151,8 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                               ButtonCustomState(
                                 button: ButtonCustom(
                                     label: 'music',
-                                    active: (result==null?false:true),
-                                    function: (isPlaying==false?(loading == "0Hz"?(result==null?musicButton:setEmptyMusic):null):null),
+                                    active: (result==null&&path==null?false:true),
+                                    function: (isPlaying==false?(loading == "0Hz"?(result==null&&path==null?musicButton:setEmptyMusic):null):null),
                                 ),
                               ),
                             ]

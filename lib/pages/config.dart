@@ -17,13 +17,14 @@ class Config extends State  {
   double frequency;
   String waveMin;
   String waveMax;
+  String path;
   bool decreasing;
   double minutes = sharedPrefs.minutes;
   double volumeMusic = sharedPrefs.volumeMusic;
   double volumeWaves = sharedPrefs.volumeWaves;
   bool loop = true;
 
-  Config(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.frequency,this.decreasing);
+  Config(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing);
 
   static const platform = const MethodChannel('com.zavarese.binauralsleep/binaural');
   String _responseFromNativeCode = '';
@@ -74,8 +75,13 @@ class Config extends State  {
 
     if(result != null) {
       _loadedFile = file.path;
+      path = _loadedFile;
     }else{
-      _loadedFile = "none";
+      if(path == null) {
+        _loadedFile = "none";
+      }else{
+        _loadedFile = path;
+      }
     }
 
     //debugPrint("_loadedFile: "+_loadedFile);
@@ -87,7 +93,7 @@ class Config extends State  {
         'isoBeatMin': isoBeatMin.toString(),
         'minutes': minutes.toString(),
         'volumeWave': (volume/10).toString(),
-        'url': _loadedFile,
+        'path': _loadedFile,
         'volumeNoise': (volumeMusic/10).toString(),
         'decreasing': decreasing.toString(),
         'loop': loop.toString(),
@@ -185,6 +191,7 @@ class Config extends State  {
         'isoBeatMax': isoBeatMax.toString(),
         'isoBeatMin': isoBeatMin.toString(),
         'decreasing': decreasing.toString(),
+        'path': (path==null?"":path),
       });
 
       response = value;
@@ -209,6 +216,7 @@ class Config extends State  {
         'isoBeatMax': isoBeatMax.toString(),
         'isoBeatMin': isoBeatMin.toString(),
         'decreasing': decreasing.toString(),
+        'path': (path==null?"":path),
       });
       response = value;
     } on PlatformException catch (e) {
@@ -233,6 +241,7 @@ class Config extends State  {
 
   //To get mp3 or wav files
   Future<void> musicButton() async {
+
     setState(() {loading = "loading...";});
 
     result = await FilePicker.platform.pickFiles(
@@ -338,6 +347,7 @@ class Config extends State  {
     if(loading == "0Hz" && isPlaying==false) {
       setState(() {
         result = null;
+        path = null;
       });
     }
   }

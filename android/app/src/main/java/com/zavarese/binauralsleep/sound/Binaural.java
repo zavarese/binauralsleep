@@ -19,10 +19,10 @@ public class Binaural{
     public float paramIsoBeatMin;
     public String waveMin;
     public String waveMax;
+    public boolean paramDecreasing;
     public static float paramMinutes;
     public static float paramVolume;
-    public static String paramURL;
-    public boolean paramDecreasing;
+    public String paramPath;
     public static Equalizer eq1;
     public static Equalizer eq2;
     public static FilePlayer player;
@@ -36,7 +36,7 @@ public class Binaural{
 
 
 
-    public Binaural(int id, String name, float frequency, float isoBeatMin,  float isoBeatMax, boolean decreasing){
+    public Binaural(int id, String name, float frequency, float isoBeatMin,  float isoBeatMax, boolean decreasing, String path){
         this.id = id;
         this.name = name;
         this.paramFrequency = frequency;
@@ -45,10 +45,11 @@ public class Binaural{
         this.paramDecreasing = decreasing;
         this.waveMin = waveWord(isoBeatMin);
         this.waveMax = waveWord(isoBeatMax);
+        this.paramPath = path;
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    public void config(int sessionID1, int sessionID2, int sessionID3, int sessionID4, float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String url, float volumeNoise, boolean loop) {
+    public void config(int sessionID1, int sessionID2, int sessionID3, int sessionID4, float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeNoise, boolean loop) {
 
         paramIsoBeatMax = isoBeatMax;
         paramIsoBeatMin = (isoBeatMin==0?0.1f:isoBeatMin);
@@ -56,7 +57,7 @@ public class Binaural{
         paramFrequency = frequency;
         paramVolume = volume;
         paramDecreasing = decreasing;
-        paramURL = url;
+        paramPath = path;
         paramLoop = loop;
 
         sessionId1 = sessionID1;
@@ -92,10 +93,12 @@ public class Binaural{
             }
         }
 
-        if (!paramURL.equals("none")) {
+        System.out.println("paramPath = "+paramPath);
+
+        if (!paramPath.equals("none")) {
 
             player = new FilePlayer(
-                    paramURL,
+                    paramPath,
                     Float.parseFloat(volumeNoise+""), (short)band, sessionId3, sessionId4, this.paramLoop);
 
         }

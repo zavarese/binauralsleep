@@ -20,7 +20,6 @@ public class ConfigDAO {
 
     public ConfigDAO(Context context)
     {
-        System.out.println("Dentro ConfigDAO");
         this.dbHelper = new SQLiteHelper(context);
     }
 
@@ -85,6 +84,7 @@ public class ConfigDAO {
             b.paramIsoBeatMax = cursor.getFloat(3);
             b.paramFrequency = cursor.getFloat(4);
             b.paramDecreasing = (cursor.getInt(5)==0?false:true);
+            b.paramPath = cursor.getString(6);
             b.waveMin = waveWord(b.paramIsoBeatMin);
             b.waveMax = waveWord(b.paramIsoBeatMax);
 
@@ -110,6 +110,7 @@ public class ConfigDAO {
         values.put(SQLiteHelper.KEY_BEAT_END, b.paramIsoBeatMax);
         values.put(SQLiteHelper.KEY_FREQUENCY, b.paramFrequency);
         values.put(SQLiteHelper.KEY_DECREASE, b.paramDecreasing);
+        //values.put(SQLiteHelper.KEY_PATH, b.paramPath);
 
         long id = database.insert(SQLiteHelper.TABLE_NAME, null, values);
 
@@ -128,6 +129,7 @@ public class ConfigDAO {
         values.put(SQLiteHelper.KEY_BEAT_END, b.paramIsoBeatMax);
         values.put(SQLiteHelper.KEY_FREQUENCY, b.paramFrequency);
         values.put(SQLiteHelper.KEY_DECREASE, b.paramDecreasing);
+        //values.put(SQLiteHelper.KEY_PATH, b.paramPath);
 
         database.update(SQLiteHelper.TABLE_NAME, values,
                 SQLiteHelper.KEY_ID +"=" +b.id,null);

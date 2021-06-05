@@ -131,7 +131,7 @@ class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
             controller: appBarCustom.controller,
             initialValue: appBarCustom.name,
             inputFormatters: [new  WhitelistingTextInputFormatter(RegExp(r"[a-zA-Z0-9]+|\s")),
-              LengthLimitingTextInputFormatter(20),
+              LengthLimitingTextInputFormatter(25),
             ], //Letters and numbers only
             keyboardType: TextInputType.text,
             cursorColor: Colors.grey,

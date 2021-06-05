@@ -9,7 +9,7 @@ public class FilePlayer {
     private Equalizer eqCurr;
     private Equalizer eqNext;
     private float volume;
-    private String url;
+    private String path;
     private int prepared;
     private MediaPlayer nextPlayer = null;
     private short channel;
@@ -17,8 +17,8 @@ public class FilePlayer {
     private int sessionId2;
     private boolean loop;
 
-    public FilePlayer(String url, float volume, short channel, int sessionId1, int sessionId2, boolean loop){
-        this.url = url;
+    public FilePlayer(String path, float volume, short channel, int sessionId1, int sessionId2, boolean loop){
+        this.path = path;
         this.volume = volume;
         this.currentPlayer = new MediaPlayer();
         this.nextPlayer = new MediaPlayer();
@@ -74,7 +74,7 @@ public class FilePlayer {
         this.eqNext.setBandLevel((short) channel,minLvl2);
 
         try {
-            this.nextPlayer.setDataSource(url);
+            this.nextPlayer.setDataSource(path);
             this.nextPlayer.setVolume((float) volume, (float) volume);
             this.nextPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -102,7 +102,7 @@ public class FilePlayer {
 
     public void play(){
         try {
-            currentPlayer.setDataSource(url);
+            currentPlayer.setDataSource(path);
             currentPlayer.setVolume(this.volume, this.volume);
 
             if(!loop){

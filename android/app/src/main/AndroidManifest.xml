@@ -9,9 +9,10 @@
         android:maxSdkVersion="27"
         android:minSdkVersion="21" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="binauralsleep">
+        android:label="Binaural - MP3 Wav">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

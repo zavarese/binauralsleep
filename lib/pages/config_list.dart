@@ -32,7 +32,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
         ),
     floatingActionButton:  FloatingActionButton(
         onPressed: () {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",3,16,"","",432,true)));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",3,16,"","",null,432,true)));
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blueGrey,
@@ -55,6 +55,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                       double.parse(nDataList.isoBeatMax.toString()),
                       nDataList.waveMin,
                       nDataList.waveMax,
+                      (nDataList.path==""?null:null), //(nDataList.path==""?null:nDataList.path)
                       double.parse(nDataList.frequency.toString()),
                       nDataList.decreasing,
                     )
