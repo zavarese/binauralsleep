@@ -11,14 +11,21 @@ import android.os.Build;
 import com.zavarese.binauralsleep.MainActivity;
 import com.zavarese.binauralsleep.Utils;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static com.zavarese.binauralsleep.sound.Binaural.paramMinutes;
+import static com.zavarese.binauralsleep.sound.Binaural.paramVolume;
+import static com.zavarese.binauralsleep.sound.Binaural.player;
+import static com.zavarese.binauralsleep.sound.Binaural.sessionId1;
+import static com.zavarese.binauralsleep.sound.Binaural.sessionId2;
+
 public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
 
     private static float currentFrequency = 0;
-    private static boolean isPlaying = true;
+    private static String isPlaying = "true";
     private static int paramAction;   // 0 - nothing; 1 - stop; 2 - kill
     AudioTrack audioTrack1;
     AudioTrack audioTrack2;
@@ -31,7 +38,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
 
     public void stop(Binaural binaural, int action) {
         currentFrequency = 0;
-        isPlaying = false;
+        isPlaying = "false";
         paramAction = action;
 
         if (audioTrack1 != null && audioTrack1.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
@@ -42,10 +49,10 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
             stopAudio(audioTrack2);
         }
 
-        if(binaural.player != null && binaural.player.isPlaying()){
-            binaural.player.stop();
-            binaural.player.release();
-            binaural.player = null;
+        if(player != null && player.isPlaying()){
+            player.stop();
+            player.release();
+            player = null;
         }
 
         cancel(true);
@@ -53,6 +60,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
 
     private void pauseAudio(AudioTrack audioTrack) {
         if(audioTrack != null && audioTrack.getPlayState()==AudioTrack.PLAYSTATE_PLAYING) {
+            isPlaying = "false";
             audioTrack.setVolume(0.00001f);
             Utils.sleepThread(50);
             audioTrack.pause();
@@ -64,6 +72,9 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
 
     private void stopAudio(AudioTrack audioTrack) {
         if(audioTrack != null && audioTrack.getPlayState()==AudioTrack.PLAYSTATE_PLAYING) {
+            isPlaying = "false";
+            audioTrack.setVolume(paramVolume/2);
+            Utils.sleepThread(50);
             audioTrack.setVolume(0f);
             Utils.sleepThread(50);
             audioTrack.stop();
@@ -77,7 +88,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         return Float.parseFloat(
                 String.format(
                         Locale.US, "%.1f",(
-                                (binaural.paramIsoBeatMax - binaural.paramIsoBeatMin)/(binaural.paramMinutes-LAST_MINUTES)
+                                (binaural.paramIsoBeatMax - binaural.paramIsoBeatMin)/(paramMinutes-LAST_MINUTES)
                         )
                 )
         );
@@ -159,7 +170,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         if(audioCurr!=null)audioCurr.setVolume(0.00001f);
         audioNext.setVolume(0.05f);
         Utils.sleepThread(50);
-        audioNext.setVolume(binaural.paramVolume / 3);
+        audioNext.setVolume(paramVolume);
         Utils.sleepThread(50);
 
         if (audioCurr != null) {
@@ -175,6 +186,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
 
         do {
             if (isCancelled()) {
+                isPlaying = "false";
                 break;
             }
 
@@ -191,20 +203,26 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         return currentFrequency;
     }
 
-    public boolean isPlaying(){
-        return this.isPlaying;
+    public String isPlaying(){
+        return isPlaying;
     }
 
     @Override
     protected Integer doInBackground(Binaural... binaurals) {
         Binaural binaural = binaurals[0];
         float freqEnd = binaural.paramIsoBeatMax - binaural.paramIsoBeatMin;
-        isPlaying = true;
+        isPlaying = "true";
         paramAction = 0;
         float lastFreq = 0;
 
-        if (!binaural.paramPath.equals("none")) {
-            binaural.player.play();
+        if (!binaural.paramPath.equals("")&&!binaural.paramPath.equals("error")) {
+            try {
+                player.play();
+            }catch (Exception e){
+                e.printStackTrace();
+                isPlaying = "error";
+                return paramAction;
+            }
         }
 
         if(binaural.paramDecreasing) {
@@ -213,14 +231,14 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
                 currentFrequency = binaural.paramIsoBeatMax - freq;
 
                 if (audioTrack1 != null && audioTrack1.getPlayState() == AudioTrack.PLAYSTATE_PLAYING){
-                    audioTrack2 = wavesBuilder(binaural, binaural.sessionId2, freq, -1);
+                    audioTrack2 = wavesBuilder(binaural, sessionId2, freq, -1);
                     executeAudio(audioTrack1, audioTrack2, binaural, 1);
                 }else{
                     if (audioTrack2 != null && audioTrack2.getPlayState() == AudioTrack.PLAYSTATE_PLAYING){
-                        audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, freq, -1);
+                        audioTrack1 = wavesBuilder(binaural, sessionId1, freq, -1);
                         executeAudio(audioTrack2, audioTrack1, binaural, 1);
                     }else{
-                        audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, freq, -1);
+                        audioTrack1 = wavesBuilder(binaural, sessionId1, freq, -1);
                         executeAudio(null, audioTrack1, binaural, 1);
                     }
                 }
@@ -242,14 +260,14 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
                 currentFrequency = binaural.paramIsoBeatMax - freq;
 
                 if (audioTrack1 != null && audioTrack1.getPlayState() == AudioTrack.PLAYSTATE_PLAYING){
-                    audioTrack2 = wavesBuilder(binaural, binaural.sessionId2, freq, -1);
+                    audioTrack2 = wavesBuilder(binaural, sessionId2, freq, -1);
                     executeAudio(audioTrack1, audioTrack2, binaural, 1);
                 }else{
                     if (audioTrack2 != null && audioTrack2.getPlayState() == AudioTrack.PLAYSTATE_PLAYING){
-                        audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, freq, -1);
+                        audioTrack1 = wavesBuilder(binaural, sessionId1, freq, -1);
                         executeAudio(audioTrack2, audioTrack1, binaural, 1);
                     }else{
-                        audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, freq, -1);
+                        audioTrack1 = wavesBuilder(binaural, sessionId1, freq, -1);
                         executeAudio(null, audioTrack1, binaural, 1);
                     }
                 }
@@ -267,22 +285,22 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         }
 
         if(audioTrack1!=null && audioTrack1.getPlayState() == AudioTrack.PLAYSTATE_PLAYING){
-            audioTrack2 = wavesBuilder(binaural, binaural.sessionId2, lastFreq, -1);
+            audioTrack2 = wavesBuilder(binaural, sessionId2, lastFreq, -1);
             executeAudio(audioTrack1, audioTrack2, binaural, LAST_MINUTES);
             stopAudio(audioTrack2);
         }
 
         if(audioTrack2!=null && audioTrack2.getPlayState() == AudioTrack.PLAYSTATE_PLAYING){
-            audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, lastFreq, -1);
+            audioTrack1 = wavesBuilder(binaural, sessionId1, lastFreq, -1);
             executeAudio(audioTrack2, audioTrack1, binaural, LAST_MINUTES);
             stopAudio(audioTrack1);
         }
 
         currentFrequency = 0;
-        isPlaying = false;
+        isPlaying = "false";
 
-        if(binaural.player != null && binaural.player.isPlaying()){
-            binaural.player.stop();
+        if(player != null && player.isPlaying()){
+            player.stop();
         }
 
         return paramAction;

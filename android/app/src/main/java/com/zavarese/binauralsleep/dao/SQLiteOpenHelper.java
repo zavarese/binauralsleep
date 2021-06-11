@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.IOException;
+
 class SQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "binaural.db";
@@ -41,8 +43,8 @@ class SQLiteHelper extends SQLiteOpenHelper {
 
 */
 
-    public SQLiteHelper(Context context) {
-        
+    public SQLiteHelper(Context context) throws SecurityException {
+
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

@@ -4,6 +4,7 @@ import 'package:binauralsleep/util/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'config.dart';
+import 'package:binauralsleep/util/util.dart';
 
 class ConfigPage extends StatefulWidget {
   int id;
@@ -56,14 +57,14 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                     Text(
                         f.format(double.parse(currFreq)).toString()+"Hz",
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.green,
                             fontWeight: FontWeight.bold,
                             fontSize: 32)
                     )),
                     Padding(padding: const EdgeInsets.all(5.0)),
                     Text(
-                        (decreasing ? "Beat Frequency: "+isoBeatMax.toInt().toString()+"Hz to "+isoBeatMin.toInt().toString()+"Hz"
-                            :"Beat Frequency: "+isoBeatMin.toInt().toString()+"Hz to "+isoBeatMax.toInt().toString()+"Hz"),
+                        (decreasing ? "Beat Frequency: "+waveWord(isoBeatMax)+"["+isoBeatMax.toInt().toString()+"Hz] to "+waveWord(isoBeatMin)+"["+isoBeatMin.toInt().toString()+"Hz]"
+                            :"Beat Frequency: "+waveWord(isoBeatMin)+"["+isoBeatMin.toInt().toString()+"Hz] to "+waveWord(isoBeatMax)+"["+isoBeatMax.toInt().toString()+"Hz]"),
                         textAlign: TextAlign.left,
                         style: textStyle
                     ),
@@ -138,8 +139,8 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: (isPlaying ? "stop" : "play"),
-                                    active: (isPlaying ? true : false),
+                                    label: (isPlaying=="true" ? "STOP" : "PLAY"),
+                                    active: (isPlaying=="true" ? true : false),
                                     function: (loading=="loading..."?null:playButton),
                                 ),
                               ),
@@ -150,9 +151,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: 'music',
-                                    active: (result==null&&path==null?false:true),
-                                    function: (isPlaying==false?(loading == "0Hz"?(result==null&&path==null?musicButton:setEmptyMusic):null):null),
+                                    label: 'MUSIC',
+                                    active: (path==""||path=="error"?false:true),
+                                    function: (isPlaying=="false"?(path==""?musicButton:setEmptyMusic):null),
                                 ),
                               ),
                             ]
@@ -162,9 +163,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: 'loop',
+                                    label: 'LOOP',
                                     active: (loop==true?true:false),
-                                    function: (isPlaying==false?musicButton:null),
+                                    function: (isPlaying=="false"?loopButton:null),
                                 ),
                               ),
                             ]
@@ -182,9 +183,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: (decreasing==true?'down':'up'),
+                                    label: (decreasing==true?'DOWN':'UP'),
                                     active: false,
-                                    function: (isPlaying==false?upDownButton:null),
+                                    function: (isPlaying=="false"?upDownButton:null),
                                 ),
                               ),
                             ]
@@ -194,9 +195,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: 'save',
+                                    label: 'SAVE',
                                     active: false,
-                                    function: (isPlaying==true || loading=="loading..."?null:(id==0?saveInsertButton:saveUpdateButton)),
+                                    function: (isPlaying=="true" || loading=="loading..."?null:(id==0?saveInsertButton:saveUpdateButton)),
                                 ),
                               ),
                             ]
@@ -206,9 +207,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: 'delete',
+                                    label: 'DELETE',
                                     active: false,
-                                    function: (isPlaying==true || loading=="loading..."?null:(id==0?null:deleteButton))
+                                    function: (isPlaying=="true" || loading=="loading..."?null:(id==0?null:deleteButton))
                                 ),
                               ),
                             ]

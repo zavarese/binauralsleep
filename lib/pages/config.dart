@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'config_list.dart';
+import 'package:binauralsleep/util/util.dart';
 
 class Config extends State  {
 
@@ -35,12 +36,12 @@ class Config extends State  {
 
   //File browser
   String loading = "0Hz";
-  String _loadedFile = "none";
-  FilePickerResult result;
-  File file;
+  //String _loadedFile = "none";
+  //FilePickerResult result;
+  //File file;
 
   //Execution status
-  bool isPlaying = false;
+  String isPlaying = "false";
   String currFreq = "0";
   final formKey = new GlobalKey<FormState>();
 
@@ -52,10 +53,7 @@ class Config extends State  {
 
   @override
   void initState(){
-    //getFrequencies();
-
     //getConfig();
-
     super.initState();
   }
 
@@ -72,7 +70,7 @@ class Config extends State  {
   //Play configuration
   Future<void> _play(double volume) async {
     String response = "";
-
+/*
     if(result != null) {
       _loadedFile = file.path;
       path = _loadedFile;
@@ -83,25 +81,28 @@ class Config extends State  {
         _loadedFile = path;
       }
     }
-
-    //debugPrint("_loadedFile: "+_loadedFile);
-
+    debugPrint("********************** PLAY PATH: "+path);
+ */
     try {
       final String value = await platform.invokeMethod('play', <String, dynamic>{
-        'frequency': frequency.toString(),
-        'isoBeatMax': isoBeatMax.toString(),
-        'isoBeatMin': isoBeatMin.toString(),
-        'minutes': minutes.toString(),
-        'volumeWave': (volume/10).toString(),
-        'path': _loadedFile,
-        'volumeNoise': (volumeMusic/10).toString(),
-        'decreasing': decreasing.toString(),
-        'loop': loop.toString(),
+          'frequency': frequency.toString(),
+          'isoBeatMax': isoBeatMax.toString(),
+          'isoBeatMin': isoBeatMin.toString(),
+          'minutes': minutes.toString(),
+          'volumeWave': (volume/10).toString(),
+          //'path': _loadedFile,
+          'path': path,
+          'volumeNoise': (volumeMusic/10).toString(),
+          'decreasing': decreasing.toString(),
+          'loop': loop.toString(),
       });
+
       response = value;
     } on PlatformException catch (e) {
       response = "Failed to Invoke: '${e.message}'.";
     }
+    _startTimer();
+    isPlaying = "true";
     setState(() {_responseFromNativeCode = response;});
   }
 
@@ -112,6 +113,7 @@ class Config extends State  {
     try {
       final String value = await platform.invokeMethod('stop');
       response = value;
+      isPlaying = "false";
     } on PlatformException catch (e) {
       response = "Failed to Invoke: '${e.message}'.";
     }
@@ -149,12 +151,18 @@ class Config extends State  {
     }
 
     setState(() {
-      if(response=="true") {
-        isPlaying = true;
-      }else{
+      isPlaying = response;
+      if(isPlaying=="false"){
+          _timer.cancel();
+          path="";
+      }
+
+      if(isPlaying=="error"){
         _timer.cancel();
-        isPlaying = false;
-        result=null;
+        path="";
+        currFreq = "0";
+        isPlaying="false";
+        funShowDialog(context,"Error:","Please, choose another file.");
       }
     });
   }
@@ -179,6 +187,7 @@ class Config extends State  {
     );
   }
 
+  //Insert config in DB
   Future<void> saveInsertButton() async {
     String response = "";
 
@@ -191,7 +200,7 @@ class Config extends State  {
         'isoBeatMax': isoBeatMax.toString(),
         'isoBeatMin': isoBeatMin.toString(),
         'decreasing': decreasing.toString(),
-        'path': (path==null?"":path),
+        'path': path,
       });
 
       response = value;
@@ -203,6 +212,7 @@ class Config extends State  {
     setState(() {id = int.parse(response);});
   }
 
+  //Update config in DB
   Future<void> saveUpdateButton() async {
     String response = "";
 
@@ -216,7 +226,7 @@ class Config extends State  {
         'isoBeatMax': isoBeatMax.toString(),
         'isoBeatMin': isoBeatMin.toString(),
         'decreasing': decreasing.toString(),
-        'path': (path==null?"":path),
+        'path': path,
       });
       response = value;
     } on PlatformException catch (e) {
@@ -226,6 +236,7 @@ class Config extends State  {
     setState(() {_responseFromNativeCode = response;});
   }
 
+  //Delete config in DB
   Future<void> deleteButton() async{
     String response = "";
 
@@ -241,19 +252,36 @@ class Config extends State  {
 
   //To get mp3 or wav files
   Future<void> musicButton() async {
+    String response = "";
 
     setState(() {loading = "loading...";});
-
+/*
     result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['mp3', 'wav'],
     );
 
-    //result = await FilePicker.platform.getDirectoryPath();
+    //String uri = await FilePicker.platform.getDirectoryPath();
 
     if(result != null) {
       file = File(result.files.single.path);
     }
+*/
+    try {
+      await platform.invokeMethod('file_explorer');
+
+      while(path == ""){
+        path = await platform.invokeMethod('get_music');
+      }
+    } on PlatformException catch (e) {
+      response = "Failed to Invoke: '${e.message}'.";
+    }
+
+    if(path=="error"){
+      path = "";
+    }
+
+    debugPrint("flutter path: "+path);
 
     setState(() {loading = "0Hz";});
   }
@@ -266,19 +294,17 @@ class Config extends State  {
   void playButton() {
     if(loading == "0Hz") {
       setState(() {
-        if (isPlaying) {
+        if (isPlaying=="true") {
           _timer.cancel();
           _stop();
-          isPlaying = false;
         } else {
           _play(volumeWaves);
-          _startTimer();
-          isPlaying = true;
         }
       });
     }
   }
 
+  //Loop music config
   void loopButton(){
     setState(() {
       if (loop == true) {
@@ -289,6 +315,7 @@ class Config extends State  {
     });
   }
 
+  //Decrease (down) or increase (up) beat frequency
   void upDownButton(){
     setState(() {
       if (decreasing == true) {
@@ -299,6 +326,7 @@ class Config extends State  {
     });
   }
 
+  //Set iso beat min and iso beat max frequency
   void setRangeFreqValues(values){
     setState(() {
       if (values.start + 1 > values.end) {
@@ -316,6 +344,7 @@ class Config extends State  {
     });
   }
 
+  //Carrier frequency
   void setFrequency(double value){
     setState(() {
       frequency = value;
@@ -344,12 +373,11 @@ class Config extends State  {
   }
 
   void setEmptyMusic(){
-    if(loading == "0Hz" && isPlaying==false) {
+    if(isPlaying=="false") {
       setState(() {
-        result = null;
-        path = null;
+        //result = null;
+        path = "";
       });
     }
   }
-
 }

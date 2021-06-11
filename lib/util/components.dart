@@ -37,7 +37,7 @@ class ButtonCustomState extends StatelessWidget {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
         child: OutlineButton(
           child: Text(button.label,
-            style: TextStyle(color: colorText,fontWeight: FontWeight.bold,fontSize: 16),
+            style: TextStyle(color: colorText,fontWeight: FontWeight.bold,fontSize: 13),
           ),
           borderSide: BorderSide(
             color: colorBorder,
@@ -130,9 +130,7 @@ class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
           child:TextFormField(
             controller: appBarCustom.controller,
             initialValue: appBarCustom.name,
-            inputFormatters: [new  WhitelistingTextInputFormatter(RegExp(r"[a-zA-Z0-9]+|\s")),
-              LengthLimitingTextInputFormatter(25),
-            ], //Letters and numbers only
+            inputFormatters: [ LengthLimitingTextInputFormatter(30),], //WhitelistingTextInputFormatter(RegExp(r"[a-zA-Z0-9]+|\s")),
             keyboardType: TextInputType.text,
             cursorColor: Colors.grey,
             style: TextStyle(
@@ -174,7 +172,7 @@ class RangeSliderCustomState  extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: RangeSlider(
-        divisions: 39,
+        divisions: 38,
         min: 1.0,
         max: 40.0,
         values: RangeValues(sliderCustom.isoBeatMin, sliderCustom.isoBeatMax),

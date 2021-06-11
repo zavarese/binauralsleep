@@ -1,6 +1,6 @@
 import 'package:binauralsleep/model/binaural.dart';
 import 'package:binauralsleep/pages/configuration.dart';
-import 'package:binauralsleep/pages/list_config.dart';
+import 'package:binauralsleep/pages/list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:binauralsleep/util/style.dart';
@@ -32,7 +32,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
         ),
     floatingActionButton:  FloatingActionButton(
         onPressed: () {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",3,16,"","",null,432,true)));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",6,12,"","","",200,true)));
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blueGrey,
@@ -55,7 +55,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                       double.parse(nDataList.isoBeatMax.toString()),
                       nDataList.waveMin,
                       nDataList.waveMax,
-                      (nDataList.path==""?null:null), //(nDataList.path==""?null:nDataList.path)
+                      "", //nDataList.path,
                       double.parse(nDataList.frequency.toString()),
                       nDataList.decreasing,
                     )
@@ -78,15 +78,16 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                     ),
                     title: Text(nDataList.name,
                       overflow: TextOverflow.ellipsis,
-                      style: textStyleMid,
+                      style: textStyleMidW,
                     ),
                     subtitle: (nDataList.decreasing
-                      ?Text(nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz] to '+nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz]',
+                      ?Text(nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz] to '+nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz]', //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)
-                      :Text(nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz] to '+nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz]',
+                      :Text(nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz] to '+nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz]', //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)),
                     trailing: Text(nDataList.frequency.toString()+"Hz",
-                      style: textStyleMid,),
+                      style: textStyleMidG,),
+                    //isThreeLine: true,
                   ),
                 ),
               ),

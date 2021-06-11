@@ -1,7 +1,5 @@
 package com.zavarese.binauralsleep;
 
-import android.media.AudioTrack;
-
 public class Utils {
 
     //private static final int AMPLITUDE_MAX = 32768;
@@ -92,7 +90,6 @@ public class Utils {
 
     public static String waveWord(float freq){
         String word="";
-        System.out.println("freq = "+freq);
 
         if(freq<=4){
             word = "Delta";

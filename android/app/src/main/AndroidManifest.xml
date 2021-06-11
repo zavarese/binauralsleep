@@ -8,11 +8,18 @@
     <uses-sdk
         android:maxSdkVersion="27"
         android:minSdkVersion="21" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permissions.READ_DATABASE"/>
+    <uses-permission android:name="android.permissioms.WRITE_DATABASE"/>
+    <meta-data android:name="flutterEmbedding" android:value="2"/>
     <application
+        android:requestLegacyExternalStorage="true"
         android:name="io.flutter.app.FlutterApplication"
+        android:icon="@mipmap/ic_launcher"
         android:label="Binaural Beats - MP3 Wav">
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -2,7 +2,11 @@ package com.zavarese.binauralsleep.sound;
 
 import android.annotation.TargetApi;
 import android.media.audiofx.Equalizer;
+import android.net.Uri;
 import android.os.Build;
+
+import com.zavarese.binauralsleep.MainActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +14,7 @@ import java.util.ArrayList;
 import static com.zavarese.binauralsleep.Utils.*;
 
 
-public class Binaural{
+public class Binaural extends Throwable{
 
     public int id;
     public String name;
@@ -23,6 +27,8 @@ public class Binaural{
     public static float paramMinutes;
     public static float paramVolume;
     public String paramPath;
+    public String hasMusic;
+    public String lastBeat;
     public static Equalizer eq1;
     public static Equalizer eq2;
     public static FilePlayer player;
@@ -30,35 +36,49 @@ public class Binaural{
     public static int sessionId2;
     public static int sessionId3;
     public static int sessionId4;
-    public static boolean paramLoop = true;
+    public boolean paramLoop = true;
+    public Uri uri;
+    public MainActivity mainActivity;
 
     public Binaural(){};
-
-
 
     public Binaural(int id, String name, float frequency, float isoBeatMin,  float isoBeatMax, boolean decreasing, String path){
         this.id = id;
         this.name = name;
-        this.paramFrequency = frequency;
-        this.paramIsoBeatMin = isoBeatMin;
-        this.paramIsoBeatMax = isoBeatMax;
+        this.paramFrequency = Math.round(frequency);
+        this.paramIsoBeatMin = Math.round(isoBeatMin);
+        this.paramIsoBeatMax = Math.round(isoBeatMax);
         this.paramDecreasing = decreasing;
         this.waveMin = waveWord(isoBeatMin);
         this.waveMax = waveWord(isoBeatMax);
         this.paramPath = path;
+
+
+        if(this.paramPath == null || this.paramPath.equals("")){
+            this.hasMusic = "music:no";
+        }else{
+            this.hasMusic = "music:yes";
+        }
+
+        if(this.paramDecreasing){
+            this.lastBeat = this.waveMin;
+        }else{
+            this.lastBeat = this.waveMax;
+        }
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    public void config(int sessionID1, int sessionID2, int sessionID3, int sessionID4, float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeNoise, boolean loop) {
+    public void config(int sessionID1, int sessionID2, int sessionID3, int sessionID4, float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeNoise, boolean loop, Uri uri, MainActivity mainActivity) {
 
         paramIsoBeatMax = isoBeatMax;
         paramIsoBeatMin = (isoBeatMin==0?0.1f:isoBeatMin);
         paramMinutes = minutes;
         paramFrequency = frequency;
-        paramVolume = volume;
+        paramVolume = volume/4;
         paramDecreasing = decreasing;
         paramPath = path;
         paramLoop = loop;
+        this.uri = uri;
+        this.mainActivity = mainActivity;
 
         sessionId1 = sessionID1;
         sessionId2 = sessionID2;
@@ -84,27 +104,22 @@ public class Binaural{
             if(frequencyEq>=getFreqMin(i) && frequencyEq<=getFreqMax(i)){
                 eq1.setBandLevel((short) i, maxLvl);
                 eq2.setBandLevel((short) i, maxLvl);
-                System.out.println("BandNum = "+i);
                 band = i;
             }else{
                 eq1.setBandLevel((short) i, minLvl);
                 eq2.setBandLevel((short) i, minLvl);
-                System.out.println("BandNum = "+i);
             }
         }
 
-        System.out.println("paramPath = "+paramPath);
+        //paramPath="/storage/9C33-6BBD/Music/Novas/About A Girl - Nirvana.mp3";
 
-        if (!paramPath.equals("none")) {
-
-            player = new FilePlayer(
-                    paramPath,
-                    Float.parseFloat(volumeNoise+""), (short)band, sessionId3, sessionId4, this.paramLoop);
+        if (!paramPath.equals("")&&!paramPath.equals("error")) {
+                player = new FilePlayer(
+                        paramPath,
+                        Float.parseFloat(volumeNoise + ""), (short) band, sessionId3, sessionId4, this.paramLoop, this.uri, this.mainActivity);
 
         }
     }
-
-
 
     public int getFreqMin(short channel){
         Equalizer eq = new Equalizer(Integer.MAX_VALUE,1);
@@ -133,8 +148,11 @@ public class Binaural{
                 jsonObject.put("isoBeatMax", ((Binaural)list.get(i)).paramIsoBeatMax);
                 jsonObject.put("waveMin", ((Binaural)list.get(i)).waveMin);
                 jsonObject.put("waveMax", ((Binaural)list.get(i)).waveMax);
+                jsonObject.put("path", ((Binaural)list.get(i)).paramPath);
                 jsonObject.put("frequency", ((Binaural)list.get(i)).paramFrequency);
                 jsonObject.put("decreasing", ((Binaural)list.get(i)).paramDecreasing);
+                jsonObject.put("hasMusic", ((Binaural)list.get(i)).hasMusic);
+                jsonObject.put("lastBeat", ((Binaural)list.get(i)).lastBeat);
 
                 jsonArray.put(jsonObject);
             }
@@ -145,5 +163,9 @@ public class Binaural{
             return "";
         }
 
+    }
+
+    public void setUri(Uri uri){
+        this.uri = uri;
     }
 }

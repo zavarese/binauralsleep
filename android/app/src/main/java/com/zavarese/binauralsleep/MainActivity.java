@@ -1,13 +1,23 @@
 package com.zavarese.binauralsleep;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,9 +25,8 @@ import com.zavarese.binauralsleep.dao.ConfigDAO;
 import com.zavarese.binauralsleep.sound.Binaural;
 import com.zavarese.binauralsleep.sound.BinauralService;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.File;
+
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
@@ -25,17 +34,23 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
     private static final String CHANNEL = "com.zavarese.binauralsleep/binaural";
-    Binaural binaural = new Binaural();
-    BinauralService wave;
+    private Binaural binaural = new Binaural();
+    private BinauralService wave;
     private static AudioManager audioManager;
-    int sessionID1;
-    int sessionID2;
-    int sessionID3;
-    int sessionID4;
-    ConfigDAO configDAO = new ConfigDAO(this);
+    private int sessionID1;
+    private int sessionID2;
+    private int sessionID3;
+    private int sessionID4;
+    private ConfigDAO configDAO = new ConfigDAO(this);
+    //private static final int CHOOSE_FILE_REQUESTCODE = 8777;
+    private static final int PICKFILE_RESULT_CODE = 8778;
+    private String path;
+    private Uri uri;
+    //private String audioID;
 
     @Override
     public void configureFlutterEngine(FlutterEngine flutterEngine) {
+        System.out.println("INICIO java");
         GeneratedPluginRegistrant.registerWith(flutterEngine);
         audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         sessionID1 = audioManager.generateAudioSessionId();
@@ -46,7 +61,10 @@ public class MainActivity extends FlutterActivity {
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
                 .setMethodCallHandler((call, result) -> {
                     switch (call.method) {
+
                         case "play":
+                            System.out.println("call.argument(path) = "+call.argument("path"));
+
                             binaural.config(sessionID1, sessionID2, sessionID3, sessionID4,
                                     Float.parseFloat(call.argument("frequency")),
                                     Float.parseFloat(call.argument("isoBeatMax")),
@@ -56,8 +74,11 @@ public class MainActivity extends FlutterActivity {
                                     Boolean.parseBoolean(call.argument("decreasing")),
                                     call.argument("path"),
                                     Float.parseFloat(call.argument("volumeNoise"))/10,
-                                    Boolean.parseBoolean(call.argument("loop"))
-                                    );
+                                    Boolean.parseBoolean(call.argument("loop")),
+                                    this.uri,
+                                    this
+                            );
+
 
                             wave = new BinauralService(this);
                             wave.execute(binaural);
@@ -79,11 +100,7 @@ public class MainActivity extends FlutterActivity {
                             break;
 
                         case "playing" :
-                            if(wave.isPlaying()){
-                                result.success("true");
-                            }else{
-                                result.success("false");
-                            }
+                            result.success(wave.isPlaying());
                             break;
 
                         case "insert" :
@@ -99,7 +116,7 @@ public class MainActivity extends FlutterActivity {
                             ));
 
                             //Toast.makeText(this, "Config added",2).show();
-                            showMessage("Configuration created");
+                            spanMessage("Configuration created");
                             result.success(id+"");
                             break;
 
@@ -115,18 +132,29 @@ public class MainActivity extends FlutterActivity {
                                             call.argument("path")
                             ));
 
-                            showMessage("Configuration updated");
+                            spanMessage("Configuration updated");
                             result.success("");
                             break;
 
                         case "delete" :
                             configDAO.deleteConfig(call.argument("id"));
-                            showMessage("Configuration deleted");
+                            spanMessage("Configuration deleted");
                             result.success("");
                             break;
 
                         case "list" :
+                            System.out.println("LIST BD");
                             result.success(binaural.toJSON(configDAO.listConfig()));
+                            break;
+
+                        case "file_explorer" :
+                            this.path = "";
+                            openFileExplorer();
+                            result.success("OK");
+                            break;
+
+                        case "get_music" :
+                            result.success(this.path);
                             break;
 
                         case "config" :
@@ -148,18 +176,38 @@ public class MainActivity extends FlutterActivity {
         super.onResume();
     }
 
-    private void showMessage(String message){
-        Toast toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
-        View view = toast.getView();
-
-        //Gets the actual oval background of the Toast then sets the colour filter
-        view.getBackground().setColorFilter(Color.parseColor("#FF607D8B"), PorterDuff.Mode.SRC_IN);
-
-        //Gets the TextView from the Toast so it can be editted
-        TextView text = view.findViewById(android.R.id.message);
-        text.setTextColor(Color.WHITE);
-        text.setTypeface(null, Typeface.BOLD);
-
+    private void spanMessage(String message){
+        SpannableString spannableString = new SpannableString(message);
+        spannableString.setSpan(
+                new ForegroundColorSpan(Color.GREEN), 0, spannableString.length(), 0
+        );
+        spannableString.setSpan(
+                new AbsoluteSizeSpan(45), 0, spannableString.length(), 0
+        );
+        Toast toast = Toast.makeText(this, spannableString, Toast.LENGTH_SHORT);
         toast.show();
     }
+
+    private void openFileExplorer(){
+        Intent intent;
+        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICKFILE_RESULT_CODE);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK){
+            this.uri = data.getData();
+            this.path = uri.getPath();
+            System.out.println("this.path = "+uri.getPath());
+            //this.audioID = data.getDataString();
+        }else{
+            this.path = "error";
+        }
+
+    }
+
 }

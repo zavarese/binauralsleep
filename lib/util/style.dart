@@ -10,7 +10,12 @@ TextStyle textStyleSmall = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 14,
 );
-TextStyle textStyleMid = TextStyle(
+TextStyle textStyleMidG = TextStyle(
+  color: Colors.green,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+);
+TextStyle textStyleMidW = TextStyle(
   color: Colors.white,
   fontWeight: FontWeight.bold,
   fontSize: 20,

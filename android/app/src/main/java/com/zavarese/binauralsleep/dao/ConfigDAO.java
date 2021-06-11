@@ -88,6 +88,18 @@ public class ConfigDAO {
             b.waveMin = waveWord(b.paramIsoBeatMin);
             b.waveMax = waveWord(b.paramIsoBeatMax);
 
+            if(b.paramPath == null || b.paramPath.equals("")){
+                b.hasMusic = "music:no";
+            }else{
+                b.hasMusic = "music:yes";
+            }
+
+            if(b.paramDecreasing){
+                b.lastBeat = b.waveMin;
+            }else{
+                b.lastBeat = b.waveMax;
+            }
+
             configs.add(b);
             cursor.moveToNext();
         }
@@ -110,7 +122,7 @@ public class ConfigDAO {
         values.put(SQLiteHelper.KEY_BEAT_END, b.paramIsoBeatMax);
         values.put(SQLiteHelper.KEY_FREQUENCY, b.paramFrequency);
         values.put(SQLiteHelper.KEY_DECREASE, b.paramDecreasing);
-        //values.put(SQLiteHelper.KEY_PATH, b.paramPath);
+        values.put(SQLiteHelper.KEY_PATH, b.paramPath);
 
         long id = database.insert(SQLiteHelper.TABLE_NAME, null, values);
 
@@ -129,7 +141,7 @@ public class ConfigDAO {
         values.put(SQLiteHelper.KEY_BEAT_END, b.paramIsoBeatMax);
         values.put(SQLiteHelper.KEY_FREQUENCY, b.paramFrequency);
         values.put(SQLiteHelper.KEY_DECREASE, b.paramDecreasing);
-        //values.put(SQLiteHelper.KEY_PATH, b.paramPath);
+        values.put(SQLiteHelper.KEY_PATH, b.paramPath);
 
         database.update(SQLiteHelper.TABLE_NAME, values,
                 SQLiteHelper.KEY_ID +"=" +b.id,null);

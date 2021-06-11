@@ -15,6 +15,7 @@ class ListConfig extends State  {
 
   @override
   void initState() {
+
     getData();
     super.initState();
   }
@@ -77,8 +78,7 @@ class ListConfig extends State  {
     _listModel.forEach((binaural) {
       if (binaural.name.toLowerCase().contains(text.toLowerCase()) ||
           binaural.frequency.toString().toLowerCase().contains(text.toLowerCase()) ||
-          binaural.waveMin.toString().toLowerCase().contains(text.toLowerCase()) ||
-          binaural.waveMax.toString().toLowerCase().contains(text.toLowerCase()))
+          binaural.lastBeat.toString().toLowerCase().contains(text.toLowerCase()))
       {
         searchResult.add(binaural);
       }

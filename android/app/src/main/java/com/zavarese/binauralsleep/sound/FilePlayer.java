@@ -1,6 +1,9 @@
 package com.zavarese.binauralsleep.sound;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
+import android.net.Uri;
+
+import com.zavarese.binauralsleep.MainActivity;
 
 import java.io.IOException;
 
@@ -16,8 +19,10 @@ public class FilePlayer {
     private int sessionId1;
     private int sessionId2;
     private boolean loop;
+    private Uri uri;
+    private MainActivity mainActivity;
 
-    public FilePlayer(String path, float volume, short channel, int sessionId1, int sessionId2, boolean loop){
+    public FilePlayer(String path, float volume, short channel, int sessionId1, int sessionId2, boolean loop, Uri uri, MainActivity mainActivity){
         this.path = path;
         this.volume = volume;
         this.currentPlayer = new MediaPlayer();
@@ -27,6 +32,8 @@ public class FilePlayer {
         this.sessionId1 = sessionId1;
         this.sessionId2 = sessionId2;
         this.loop = loop;
+        this.uri = uri;
+        this.mainActivity = mainActivity;
 
         this.currentPlayer.setAudioSessionId(this.sessionId1);
         this.eqCurr = new Equalizer(Integer.MAX_VALUE,this.sessionId1);
@@ -74,7 +81,7 @@ public class FilePlayer {
         this.eqNext.setBandLevel((short) channel,minLvl2);
 
         try {
-            this.nextPlayer.setDataSource(path);
+            this.nextPlayer.setDataSource(this.mainActivity, uri);
             this.nextPlayer.setVolume((float) volume, (float) volume);
             this.nextPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -100,28 +107,24 @@ public class FilePlayer {
                 }
             };
 
-    public void play(){
-        try {
-            currentPlayer.setDataSource(path);
-            currentPlayer.setVolume(this.volume, this.volume);
+    public void play() throws IOException{
+        System.out.println("FilePlayer path: "+uri.getPath());
+        currentPlayer.setDataSource(this.mainActivity, uri);
+        currentPlayer.setVolume(this.volume, this.volume);
 
-            if(!loop){
-                currentPlayer.prepare();
-                currentPlayer.start();
-            }else{
-                currentPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        prepared = 1;
-                        currentPlayer.start();
-                    }
-                });
-                currentPlayer.prepareAsync();
-                createNextMediaPlayer();
-            }
-
-        }catch (IOException e){
-            e.printStackTrace();
+        if(!loop){
+            currentPlayer.prepare();
+            currentPlayer.start();
+        }else{
+            currentPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    prepared = 1;
+                    currentPlayer.start();
+                }
+            });
+            currentPlayer.prepareAsync();
+            createNextMediaPlayer();
         }
     }
 

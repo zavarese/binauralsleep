@@ -13,6 +13,8 @@ class Binaural {
   String path;
   int frequency;
   bool decreasing;
+  String hasMusic;
+  String lastBeat;
 
   Binaural({
     this.id,
@@ -23,7 +25,9 @@ class Binaural {
     this.waveMax,
     this.path,
     this.frequency,
-    this.decreasing
+    this.decreasing,
+    this.hasMusic,
+    this.lastBeat,
   });
 
   factory Binaural.fromJson(Map<String, dynamic> json) => Binaural(
@@ -36,6 +40,8 @@ class Binaural {
     path: json["path"],
     frequency: json["frequency"],
     decreasing: json["decreasing"],
+    hasMusic: json["hasMusic"],
+    lastBeat: json["lastBeat"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -48,5 +54,7 @@ class Binaural {
     "path": path,
     "frequency": frequency,
     "decreasing": decreasing,
+    "hasMusic": hasMusic,
+    "lastBeat": lastBeat,
   };
 }
