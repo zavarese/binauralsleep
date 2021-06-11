@@ -5,18 +5,23 @@ TextStyle textStyle = TextStyle(
   fontWeight: FontWeight.normal,
   fontSize: 14,
 );
+TextStyle textStyleG = TextStyle(
+  color: Color.fromRGBO(126, 168, 129, 1),
+  fontWeight: FontWeight.normal,
+  fontSize: 14,
+);
 TextStyle textStyleSmall = TextStyle(
-  color: Colors.grey,
+  color: Color.fromRGBO(126, 168, 129, 1),
   fontWeight: FontWeight.bold,
   fontSize: 14,
 );
-TextStyle textStyleMidG = TextStyle(
-  color: Colors.green,
+TextStyle textStyleMid = TextStyle(
+  color: Colors.white,
   fontWeight: FontWeight.bold,
   fontSize: 20,
 );
-TextStyle textStyleMidW = TextStyle(
-  color: Colors.white,
+TextStyle textStyleMidO = TextStyle(
+  color: Colors.orange,
   fontWeight: FontWeight.bold,
   fontSize: 20,
 );

@@ -50,7 +50,6 @@ public class MainActivity extends FlutterActivity {
 
     @Override
     public void configureFlutterEngine(FlutterEngine flutterEngine) {
-        System.out.println("INICIO java");
         GeneratedPluginRegistrant.registerWith(flutterEngine);
         audioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         sessionID1 = audioManager.generateAudioSessionId();

@@ -78,7 +78,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                     ),
                     title: Text(nDataList.name,
                       overflow: TextOverflow.ellipsis,
-                      style: textStyleMidW,
+                      style: textStyleMid,
                     ),
                     subtitle: (nDataList.decreasing
                       ?Text(nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz] to '+nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz]', //\n'+nDataList.hasMusic,
@@ -86,7 +86,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                       :Text(nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz] to '+nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz]', //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)),
                     trailing: Text(nDataList.frequency.toString()+"Hz",
-                      style: textStyleMidG,),
+                      style: textStyleMidO,),
                     //isThreeLine: true,
                   ),
                 ),

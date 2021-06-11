@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 
 //*********** Customized Button ***********
 class ButtonCustom {
-  const ButtonCustom({this.label,this.active,this.function});
+  const ButtonCustom({this.label,this.color,this.active,this.function});
+
   final String label;
+  final Color color;
   final bool active;
   final Function function;
 }
@@ -20,13 +22,13 @@ class ButtonCustomState extends StatelessWidget {
     Color colorText;
 
     if(button.active){
-      colorBackground = Colors.grey;
-      colorBorder = Colors.grey;
+      colorBackground = button.color;
+      colorBorder = button.color;
       colorText = Colors.black;
     }else{
       colorBackground = Color.fromRGBO(28, 27, 27, 1);
-      colorBorder = Colors.grey;
-      colorText = Colors.grey;
+      colorBorder = button.color;
+      colorText = button.color;
     }
 
     return DecoratedBox(
@@ -172,6 +174,7 @@ class RangeSliderCustomState  extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: RangeSlider(
+        activeColor: Color.fromRGBO(63, 111, 66, 1),
         divisions: 38,
         min: 1.0,
         max: 40.0,

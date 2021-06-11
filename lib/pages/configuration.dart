@@ -57,7 +57,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                     Text(
                         f.format(double.parse(currFreq)).toString()+"Hz",
                         style: TextStyle(
-                            color: Colors.green,
+                            color: Colors.orange,
                             fontWeight: FontWeight.bold,
                             fontSize: 32)
                     )),
@@ -66,7 +66,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                         (decreasing ? "Beat Frequency: "+waveWord(isoBeatMax)+"["+isoBeatMax.toInt().toString()+"Hz] to "+waveWord(isoBeatMin)+"["+isoBeatMin.toInt().toString()+"Hz]"
                             :"Beat Frequency: "+waveWord(isoBeatMin)+"["+isoBeatMin.toInt().toString()+"Hz] to "+waveWord(isoBeatMax)+"["+isoBeatMax.toInt().toString()+"Hz]"),
                         textAlign: TextAlign.left,
-                        style: textStyle
+                        style: textStyleG
                     ),
                     RangeSliderCustomState(
                       sliderCustom: RangeSliderCustom(
@@ -142,6 +142,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                     label: (isPlaying=="true" ? "STOP" : "PLAY"),
                                     active: (isPlaying=="true" ? true : false),
                                     function: (loading=="loading..."?null:playButton),
+                                    color: Colors.orange,
                                 ),
                               ),
                             ]
@@ -154,6 +155,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                     label: 'MUSIC',
                                     active: (path==""||path=="error"?false:true),
                                     function: (isPlaying=="false"?(path==""?musicButton:setEmptyMusic):null),
+                                    color: Colors.grey,
                                 ),
                               ),
                             ]
@@ -166,6 +168,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                     label: 'LOOP',
                                     active: (loop==true?true:false),
                                     function: (isPlaying=="false"?loopButton:null),
+                                    color: Colors.grey,
                                 ),
                               ),
                             ]
@@ -186,6 +189,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                     label: (decreasing==true?'DOWN':'UP'),
                                     active: false,
                                     function: (isPlaying=="false"?upDownButton:null),
+                                    color: Colors.green,
                                 ),
                               ),
                             ]
@@ -198,6 +202,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                     label: 'SAVE',
                                     active: false,
                                     function: (isPlaying=="true" || loading=="loading..."?null:(id==0?saveInsertButton:saveUpdateButton)),
+                                    color: Colors.grey,
                                 ),
                               ),
                             ]
@@ -209,7 +214,8 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 button: ButtonCustom(
                                     label: 'DELETE',
                                     active: false,
-                                    function: (isPlaying=="true" || loading=="loading..."?null:(id==0?null:deleteButton))
+                                    function: (isPlaying=="true" || loading=="loading..."?null:(id==0?null:deleteButton)),
+                                    color: Colors.grey,
                                 ),
                               ),
                             ]
