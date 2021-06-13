@@ -1,10 +1,12 @@
 
+
 import 'package:binauralsleep/util/style.dart';
 import 'package:binauralsleep/util/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'config.dart';
 import 'package:binauralsleep/util/util.dart';
+import 'package:segment_display/segment_display.dart';
 
 class ConfigPage extends StatefulWidget {
   int id;
@@ -39,7 +41,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
             formKey: formKey,
             name: name,
             icon: Icons.arrow_back,
-            label: "Config name:",
+            label: "config name:",
             iconBtnFunction: backButton,
             inputTxtFunction: setName,
           ),
@@ -52,19 +54,92 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    Padding(padding: const EdgeInsets.all(8.0)),
-                    (loading=="loading..."?CircularProgressIndicator():
-                    Text(
-                        f.format(double.parse(currFreq)).toString()+"Hz",
-                        style: TextStyle(
-                            color: Colors.orange,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 32)
-                    )),
                     Padding(padding: const EdgeInsets.all(5.0)),
-                    Text(
-                        (decreasing ? "Beat Frequency: "+waveWord(isoBeatMax)+"["+isoBeatMax.toInt().toString()+"Hz] to "+waveWord(isoBeatMin)+"["+isoBeatMin.toInt().toString()+"Hz]"
-                            :"Beat Frequency: "+waveWord(isoBeatMin)+"["+isoBeatMin.toInt().toString()+"Hz] to "+waveWord(isoBeatMax)+"["+isoBeatMax.toInt().toString()+"Hz]"),
+                    DisplayCustomState(
+                      displayCustom: DisplayCustom(
+                        value: f.format(double.parse(currFreq)).toString(),
+                      ),
+                    ),
+                  ]
+                ),
+                Column(
+                    children: <Widget>[
+                      Padding(padding: const EdgeInsets.all(5.0)),
+                      Row(
+                          children: <Widget>[
+                            SquareCustomState(
+                              squareCustom: SquareCustom(
+                                value: "START",
+                              ) ,
+                            )
+                          ]
+                      ),
+                      Row(
+                          children: <Widget>[
+                            SquareCustomState(
+                              squareCustom: SquareCustom(
+                                value: "STOP",
+                              ) ,
+                            ),
+                          ]
+                      ),
+                    ]
+                ),
+                Column(
+                    children: <Widget>[
+                      Padding(padding: const EdgeInsets.all(5.0)),
+                      Row(
+                          children: <Widget>[
+                            SquareCustomState(
+                              squareCustom: SquareCustom(
+                                value: (decreasing ? isoBeatMax.toInt().toString(): isoBeatMin.toInt().toString())+"Hz",
+                              ) ,
+                            ),
+                          ]
+                      ),
+                      Row(
+                          children: <Widget>[
+                            SquareCustomState(
+                              squareCustom: SquareCustom(
+                                value: (decreasing ? isoBeatMin.toInt().toString(): isoBeatMax.toInt().toString())+"Hz",
+                              ) ,
+                            ),
+                          ]
+                      ),
+                    ]
+                ),
+                Column(
+                    children: <Widget>[
+                      Padding(padding: const EdgeInsets.all(5.0)),
+                      Row(
+                          children: <Widget>[
+                            SquareCustomState(
+                              squareCustom: SquareCustom(
+                                value: (decreasing ? waveWord(isoBeatMax): waveWord(isoBeatMin)),
+                              ) ,
+                            ),
+                          ]
+                      ),
+                      Row(
+                          children: <Widget>[
+                            SquareCustomState(
+                              squareCustom: SquareCustom(
+                                value: (decreasing ? waveWord(isoBeatMin): waveWord(isoBeatMax)),
+                              ) ,
+                            ),
+                          ]
+                      ),
+                    ]
+                ),
+              ]
+            ),
+            Row(
+              mainAxisAlignment:  MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Padding(padding: const EdgeInsets.all(8.0)),
+                    Text("Beat Frequency: ",
                         textAlign: TextAlign.left,
                         style: textStyleG
                     ),

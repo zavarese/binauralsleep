@@ -34,8 +34,8 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
         onPressed: () {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",6,12,"","","",200,true)));
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blueGrey,
+        child: Icon(Icons.add_to_photos_rounded),
+        backgroundColor: Colors.blueAccent,
         foregroundColor: Color.fromRGBO(189, 184, 184, 1),
     ),
     body: loading ? Center (child: CircularProgressIndicator()) :ListView.builder(
@@ -81,9 +81,11 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                       style: textStyleMid,
                     ),
                     subtitle: (nDataList.decreasing
-                      ?Text(nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz] to '+nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz]', //\n'+nDataList.hasMusic,
+                      ?Text("\u2192"+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase()+'\n'+
+                        "    "+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase(), //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)
-                      :Text(nDataList.waveMin+"["+nDataList.isoBeatMin.toString()+'Hz] to '+nDataList.waveMax+"["+nDataList.isoBeatMax.toString()+'Hz]', //\n'+nDataList.hasMusic,
+                      :Text("\u2192"+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase()+'\n'+
+                        "    "+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase(), //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)),
                     trailing: Text(nDataList.frequency.toString()+"Hz",
                       style: textStyleMidO,),

@@ -26,7 +26,7 @@ TextStyle textStyleMidO = TextStyle(
   fontSize: 20,
 );
 TextStyle textStyleBig = TextStyle(
-  color: Colors.blueGrey,
+  color: Colors.blueAccent,
   fontWeight: FontWeight.normal,
   fontSize: 50,
 );

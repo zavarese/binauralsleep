@@ -32,10 +32,10 @@ class Config extends State  {
   String action = "";
   int _start;
   Timer _timer;
-  var f = new NumberFormat("###.#", "en_US");
+  var f = new NumberFormat("00.0", "en_US");
 
   //File browser
-  String loading = "0Hz";
+  String loading = "0.0Hz";
   //String _loadedFile = "none";
   //FilePickerResult result;
   //File file;
@@ -84,10 +84,10 @@ class Config extends State  {
     debugPrint("********************** PLAY PATH: "+path);
  */
     try {
-      final String value = await platform.invokeMethod('play', <String, dynamic>{
+      response = await platform.invokeMethod('play', <String, dynamic>{
           'frequency': frequency.toString(),
-          'isoBeatMax': isoBeatMax.toString(),
-          'isoBeatMin': isoBeatMin.toString(),
+          'isoBeatMax': isoBeatMax.toInt().toString(),
+          'isoBeatMin': isoBeatMin.toInt().toString(),
           'minutes': minutes.toString(),
           'volumeWave': (volume/10).toString(),
           //'path': _loadedFile,
@@ -97,13 +97,14 @@ class Config extends State  {
           'loop': loop.toString(),
       });
 
-      response = value;
     } on PlatformException catch (e) {
       response = "Failed to Invoke: '${e.message}'.";
     }
     _startTimer();
     isPlaying = "true";
-    setState(() {_responseFromNativeCode = response;});
+    setState(() {
+      path = response;
+    });
   }
 
   Future<String> _stop() async {
@@ -268,14 +269,16 @@ class Config extends State  {
     }
 */
     try {
-      await platform.invokeMethod('file_explorer');
+      path = await platform.invokeMethod('file_explorer');
 
-      while(path == ""){
-        path = await platform.invokeMethod('get_music');
-      }
+      //while(path == ""){
+        //path = await platform.invokeMethod('get_music');
+      //}
     } on PlatformException catch (e) {
       response = "Failed to Invoke: '${e.message}'.";
     }
+
+    debugPrint("flutter path: "+path);
 
     if(path=="error"){
       path = "";
@@ -283,7 +286,7 @@ class Config extends State  {
 
     debugPrint("flutter path: "+path);
 
-    setState(() {loading = "0Hz";});
+    setState(() {loading = "0.0Hz";});
   }
 
   void backButton(){
@@ -292,7 +295,7 @@ class Config extends State  {
 
   //Play float button
   void playButton() {
-    if(loading == "0Hz") {
+    if(loading == "0.0Hz") {
       setState(() {
         if (isPlaying=="true") {
           _timer.cancel();

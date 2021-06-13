@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:segment_display/segment_display.dart';
 
 //*********** Customized Button ***********
 class ButtonCustom {
@@ -181,6 +182,94 @@ class RangeSliderCustomState  extends StatelessWidget {
         values: RangeValues(sliderCustom.isoBeatMin, sliderCustom.isoBeatMax),
         labels: RangeLabels(sliderCustom.isoBeatMin.toInt().toString(), sliderCustom.isoBeatMax.toInt().toString()),
         onChanged: sliderCustom.function,
+      ),
+    );
+  }
+}
+
+class DisplayCustom {
+  const DisplayCustom({this.value,});
+
+  final String value;
+}
+
+//Carrier frequency slider bar
+class DisplayCustomState  extends StatelessWidget {
+  const DisplayCustomState({Key key, this.displayCustom}) : super(key: key);
+  final DisplayCustom displayCustom;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerRight,
+      decoration: BoxDecoration(
+          color: Colors.black,
+          border: Border.all(
+            color: Color.fromRGBO(63, 111, 66, 1),
+          ),
+        ),
+      width: 150,
+      height: 50,
+      child: Row(
+        children: [
+          Text(" "),
+          Column(
+              children: <Widget>[
+                Padding(padding: const EdgeInsets.all(2.0)),
+                SevenSegmentDisplay(
+                  value: displayCustom.value,
+                  size: 3.5,
+                  backgroundColor: Colors.black,
+                  segmentStyle: DefaultSegmentStyle(
+                    enabledColor: Colors.orange,
+                  ),
+                )
+              ]
+          ),
+          Column(
+              children: <Widget>[
+                Text(" Hz",
+                    style: TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 30)
+                ),
+              ]
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SquareCustom {
+  const SquareCustom({this.value,});
+
+  final String value;
+}
+
+class SquareCustomState  extends StatelessWidget {
+  const SquareCustomState({Key key, this.squareCustom}) : super(key: key);
+  final SquareCustom squareCustom;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(28, 27, 27, 1),
+        border: Border.all(
+          color: Color.fromRGBO(63, 111, 66, 1),
+        ),
+      ),
+      width: 50,
+      height: 25,
+      child: Text(squareCustom.value,
+        style: TextStyle(
+          color: Color.fromRGBO(63, 111, 66, 1),
+          fontWeight: FontWeight.normal,
+          fontSize: 12,
+        ),
       ),
     );
   }

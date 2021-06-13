@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 class ListConfig extends State  {
   static const platform = const MethodChannel('com.zavarese.binauralsleep/binaural');
   static final List<Binaural> _listModel = [];
   List<Binaural> searchResult = [];
+  var f = new NumberFormat("00", "en_US");
 
   var loading = false;
   final formKey = new GlobalKey<FormState>();
@@ -15,7 +18,6 @@ class ListConfig extends State  {
 
   @override
   void initState() {
-
     getData();
     super.initState();
   }

@@ -205,6 +205,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.1"
+  segment_display:
+    dependency: "direct main"
+    description:
+      name: segment_display
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.0"
   shared_preferences:
     dependency: "direct main"
     description:
