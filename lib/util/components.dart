@@ -1,3 +1,5 @@
+import 'package:binauralsleep/pages/help.dart';
+import 'package:binauralsleep/util/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:segment_display/segment_display.dart';
@@ -127,6 +129,15 @@ class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
               icon: Icon(appBarCustom.icon, color: Color.fromRGBO(189, 184, 184, 1)),
               onPressed: appBarCustom.iconBtnFunction
           ),
+          IconButton(
+              icon: Icon(Icons.help, color: Color.fromRGBO(189, 184, 184, 1)),
+              onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HelpPage()),
+                );
+              }
+          ),
         ],
         title: Form(
           key: appBarCustom.formKey,
@@ -142,10 +153,7 @@ class AppBarStateCustom  extends StatelessWidget implements PreferredSizeWidget{
             ),
             decoration: InputDecoration(
                 labelText: appBarCustom.label,
-                labelStyle: TextStyle(
-                  color: Color.fromRGBO(189, 184, 184, 1),
-                  fontStyle: FontStyle.italic,
-                )
+                labelStyle: textStyleActBar
             ),
             onChanged: appBarCustom.inputTxtFunction,
           ),
@@ -187,13 +195,13 @@ class RangeSliderCustomState  extends StatelessWidget {
   }
 }
 
+//*********** Show current beat frequency ***********
 class DisplayCustom {
   const DisplayCustom({this.value,});
 
   final String value;
 }
 
-//Carrier frequency slider bar
 class DisplayCustomState  extends StatelessWidget {
   const DisplayCustomState({Key key, this.displayCustom}) : super(key: key);
   final DisplayCustom displayCustom;
@@ -242,10 +250,16 @@ class DisplayCustomState  extends StatelessWidget {
   }
 }
 
+//*********** Square used in config page to show beat frequency information ***********
 class SquareCustom {
-  const SquareCustom({this.value,});
+  const SquareCustom({this.value,this.width,this.height,this.borderColor,this.backgroundColor,this.textStyle});
 
   final String value;
+  final double width;
+  final double height;
+  final Color borderColor;
+  final Color backgroundColor;
+  final TextStyle textStyle;
 }
 
 class SquareCustomState  extends StatelessWidget {
@@ -257,19 +271,15 @@ class SquareCustomState  extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: Color.fromRGBO(28, 27, 27, 1),
+        color: squareCustom.backgroundColor,
         border: Border.all(
-          color: Color.fromRGBO(63, 111, 66, 1),
+          color: squareCustom.borderColor,
         ),
       ),
-      width: 50,
-      height: 25,
-      child: Text(squareCustom.value,
-        style: TextStyle(
-          color: Color.fromRGBO(63, 111, 66, 1),
-          fontWeight: FontWeight.normal,
-          fontSize: 12,
-        ),
+      width: squareCustom.width,
+      height: squareCustom.height,
+      child: Text(squareCustom.value,  //Color.fromRGBO(63, 111, 66, 1)
+        style: squareCustom.textStyle,
       ),
     );
   }

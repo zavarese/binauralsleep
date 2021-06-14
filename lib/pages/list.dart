@@ -89,30 +89,4 @@ class ListConfig extends State  {
     setState(() {});
   }
 
-  String greekLatter(int beatMin){
-    String greek;
-
-    if(beatMin<=4){
-      greek = "\u03b4"; //Delta
-    }
-
-    if(beatMin>4 && beatMin<=8){
-      greek = "\u03b8"; //Theta
-    }
-
-    if(beatMin>8 && beatMin<=12){
-      greek = "\u03b1"; //Alpha
-    }
-
-    if(beatMin>12 && beatMin<=35){
-      greek = "\u03b2"; //Beta
-    }
-
-    if(beatMin>35){
-      greek = "\u03b3"; //Gamma
-    }
-
-    return greek;
-  }
-
 }

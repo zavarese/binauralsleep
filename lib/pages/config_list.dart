@@ -1,6 +1,7 @@
 import 'package:binauralsleep/model/binaural.dart';
 import 'package:binauralsleep/pages/configuration.dart';
 import 'package:binauralsleep/pages/list.dart';
+import 'package:binauralsleep/util/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:binauralsleep/util/style.dart';
@@ -81,11 +82,11 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                       style: textStyleMid,
                     ),
                     subtitle: (nDataList.decreasing
-                      ?Text("\u2192"+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase()+'\n'+
-                        "    "+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase(), //\n'+nDataList.hasMusic,
+                      ?Text("\u2193"+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase()+'\n'+
+                        "  "+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase(), //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)
-                      :Text("\u2192"+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase()+'\n'+
-                        "    "+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase(), //\n'+nDataList.hasMusic,
+                      :Text("\u2193"+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase()+'\n'+
+                        "  "+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase(), //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)),
                     trailing: Text(nDataList.frequency.toString()+"Hz",
                       style: textStyleMidO,),

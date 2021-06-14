@@ -3,27 +3,55 @@ import 'package:flutter/material.dart';
 String waveWord(double freq){
   String word="";
 
-  if(freq<=4){
+  int value = freq.toInt();
+
+  if(value<=4){
     word = "Delta";
   }
 
-  if(freq>4 && freq<=8){
+  if(value>4 && value<=8){
     word = "Theta";
   }
 
-  if(freq>8 && freq<=12){
+  if(value>8 && value<=12){
     word = "Alpha";
   }
 
-  if(freq>12 && freq<=35){
+  if(value>12 && value<35){
     word = "Beta";
   }
 
-  if(freq>35){
+  if(value>=35){
     word = "Gamma";
   }
 
   return word;
+}
+
+String greekLatter(int beatMin){
+  String greek;
+
+  if(beatMin<=4){
+    greek = "\u03b4"; //Delta
+  }
+
+  if(beatMin>4 && beatMin<=8){
+    greek = "\u03b8"; //Theta
+  }
+
+  if(beatMin>8 && beatMin<=12){
+    greek = "\u03b1"; //Alpha
+  }
+
+  if(beatMin>12 && beatMin<=35){
+    greek = "\u03b2"; //Beta
+  }
+
+  if(beatMin>35){
+    greek = "\u03b3"; //Gamma
+  }
+
+  return greek;
 }
 
 void funShowDialog(BuildContext context, String title, String content) {

@@ -1,12 +1,10 @@
 
-
 import 'package:binauralsleep/util/style.dart';
 import 'package:binauralsleep/util/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'config.dart';
 import 'package:binauralsleep/util/util.dart';
-import 'package:segment_display/segment_display.dart';
 
 class ConfigPage extends StatefulWidget {
   int id;
@@ -70,6 +68,11 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             SquareCustomState(
                               squareCustom: SquareCustom(
                                 value: "START",
+                                width: 50,
+                                height: 25,
+                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                textStyle: textStyleConfigSquare,
+                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
                               ) ,
                             )
                           ]
@@ -79,6 +82,11 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             SquareCustomState(
                               squareCustom: SquareCustom(
                                 value: "STOP",
+                                width: 50,
+                                height: 25,
+                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                textStyle: textStyleConfigSquare,
+                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
                               ) ,
                             ),
                           ]
@@ -93,6 +101,11 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             SquareCustomState(
                               squareCustom: SquareCustom(
                                 value: (decreasing ? isoBeatMax.toInt().toString(): isoBeatMin.toInt().toString())+"Hz",
+                                width: 50,
+                                height: 25,
+                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                textStyle: textStyleConfigSquare,
+                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
                               ) ,
                             ),
                           ]
@@ -102,6 +115,11 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             SquareCustomState(
                               squareCustom: SquareCustom(
                                 value: (decreasing ? isoBeatMin.toInt().toString(): isoBeatMax.toInt().toString())+"Hz",
+                                width: 50,
+                                height: 25,
+                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                textStyle: textStyleConfigSquare,
+                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
                               ) ,
                             ),
                           ]
@@ -116,6 +134,11 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             SquareCustomState(
                               squareCustom: SquareCustom(
                                 value: (decreasing ? waveWord(isoBeatMax): waveWord(isoBeatMin)),
+                                width: 50,
+                                height: 25,
+                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                textStyle: textStyleConfigSquare,
+                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
                               ) ,
                             ),
                           ]
@@ -125,6 +148,11 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             SquareCustomState(
                               squareCustom: SquareCustom(
                                 value: (decreasing ? waveWord(isoBeatMin): waveWord(isoBeatMax)),
+                                width: 50,
+                                height: 25,
+                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                textStyle: textStyleConfigSquare,
+                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
                               ) ,
                             ),
                           ]
@@ -141,7 +169,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                     Padding(padding: const EdgeInsets.all(8.0)),
                     Text("Beat Frequency: ",
                         textAlign: TextAlign.left,
-                        style: textStyleG
+                        style: textStyleSmallG
                     ),
                     RangeSliderCustomState(
                       sliderCustom: RangeSliderCustom(
@@ -179,7 +207,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                         )
                     ),
                     Text(
-                        "Waves Volume: "+(volumeWaves).toStringAsFixed(0)+"%",
+                        "Beats Volume: "+(volumeWaves).toStringAsFixed(0)+"%",
                         textAlign: TextAlign.left,
                         style: textStyle
                     ),
