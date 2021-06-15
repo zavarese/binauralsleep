@@ -17,11 +17,19 @@ String waveWord(double freq){
     word = "Alpha";
   }
 
-  if(value>12 && value<35){
-    word = "Beta";
+  if(value>12 && value<=16){
+    word = "Beta 1";
   }
 
-  if(value>=35){
+  if(value>16 && value<=20){
+    word = "Beta 2";
+  }
+
+  if(value>20 && value<=30){
+    word = "Beta 3";
+  }
+
+  if(value>30){
     word = "Gamma";
   }
 
@@ -43,11 +51,11 @@ String greekLatter(int beatMin){
     greek = "\u03b1"; //Alpha
   }
 
-  if(beatMin>12 && beatMin<=35){
+  if(beatMin>12 && beatMin<=30){
     greek = "\u03b2"; //Beta
   }
 
-  if(beatMin>35){
+  if(beatMin>30){
     greek = "\u03b3"; //Gamma
   }
 

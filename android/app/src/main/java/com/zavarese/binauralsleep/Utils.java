@@ -103,11 +103,19 @@ public class Utils {
             word = "Alpha";
         }
 
-        if(freq>12 && freq<=35){
-            word = "Beta";
+        if(freq>12 && freq<=16){
+            word = "Beta 1";
         }
 
-        if(freq>35){
+        if(freq>16 && freq<=20){
+            word = "Beta 2";
+        }
+
+        if(freq>20 && freq<=30){
+            word = "Beta 3";
+        }
+
+        if(freq>30){
             word = "Gamma";
         }
 

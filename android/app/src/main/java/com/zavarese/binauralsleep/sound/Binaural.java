@@ -25,7 +25,7 @@ public class Binaural extends Throwable{
     public String waveMax;
     public boolean paramDecreasing;
     public static float paramMinutes;
-    public static float paramVolume;
+    public float paramVolume;
     public String paramPath;
     public String hasMusic;
     public String lastBeat;
@@ -67,16 +67,16 @@ public class Binaural extends Throwable{
         }
     }
 
-    public void config(int sessionID1, int sessionID2, int sessionID3, int sessionID4, float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeNoise, boolean loop, Uri uri, MainActivity mainActivity) {
+    public void config(int sessionID1, int sessionID2, int sessionID3, int sessionID4, float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeMusic, boolean loop, Uri uri, MainActivity mainActivity) {
 
-        paramIsoBeatMax = isoBeatMax;
-        paramIsoBeatMin = (isoBeatMin==0?0.1f:isoBeatMin);
-        paramMinutes = minutes;
-        paramFrequency = frequency;
-        paramVolume = volume/4;
-        paramDecreasing = decreasing;
-        paramPath = path;
-        paramLoop = loop;
+        this.paramIsoBeatMax = isoBeatMax;
+        this.paramIsoBeatMin = (isoBeatMin==0?0.1f:isoBeatMin);
+        this.paramMinutes = minutes;
+        this.paramFrequency = frequency;
+        this.paramVolume = volume;
+        this.paramDecreasing = decreasing;
+        this.paramPath = path;
+        this.paramLoop = loop;
         this.uri = uri;
         this.mainActivity = mainActivity;
 
@@ -116,7 +116,7 @@ public class Binaural extends Throwable{
         if (!paramPath.equals("")&&!paramPath.equals("error")) {
                 player = new FilePlayer(
                         paramPath,
-                        Float.parseFloat(volumeNoise + ""), (short) band, sessionId3, sessionId4, this.paramLoop, this.uri, this.mainActivity);
+                        Float.parseFloat(volumeMusic + ""), (short) band, sessionId3, sessionId4, this.paramLoop, this.uri, this.mainActivity);
 
         }
     }

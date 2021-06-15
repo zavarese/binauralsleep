@@ -170,7 +170,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                     Padding(padding: const EdgeInsets.all(8.0)),
                     Text("Beat Frequency: ",
                         textAlign: TextAlign.left,
-                        style: textStyleSmallG
+                        style: textStyle
                     ),
                     RangeSliderCustomState(
                       sliderCustom: RangeSliderCustom(

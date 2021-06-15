@@ -68,7 +68,7 @@ class Config extends State  {
   }
 
   //Play configuration
-  Future<void> _play(double volume) async {
+  Future<void> _play() async {
     String response = "";
 /*
     if(result != null) {
@@ -89,7 +89,7 @@ class Config extends State  {
           'isoBeatMax': isoBeatMax.toInt().toString(),
           'isoBeatMin': isoBeatMin.toInt().toString(),
           'minutes': minutes.toString(),
-          'volumeWave': (volume/10).toString(),
+          'volumeWave': (volumeWaves/10).toString(),
           //'path': _loadedFile,
           'path': path,
           'volumeNoise': (volumeMusic/10).toString(),
@@ -290,6 +290,12 @@ class Config extends State  {
   }
 
   void backButton(){
+    setState(() {
+      if (isPlaying=="true") {
+        _timer.cancel();
+        _stop();
+      }
+    });
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ListConfigPage()));
   }
 
@@ -301,7 +307,7 @@ class Config extends State  {
           _timer.cancel();
           _stop();
         } else {
-          _play(volumeWaves);
+          _play();
         }
       });
     }

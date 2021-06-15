@@ -79,7 +79,7 @@ public class MainActivity extends FlutterActivity {
                             break;
 
                         case "stop" :
-                            wave.stop(binaural, 1);
+                            wave.stop(binaural.paramVolume, 1);
                             result.success("");
                             break;
 
@@ -154,7 +154,7 @@ public class MainActivity extends FlutterActivity {
     }
 
     protected void onDestroy() {
-        wave.stop(binaural,2);
+        wave.stop(binaural.paramVolume,2);
         super.onDestroy();
     }
 

@@ -6,12 +6,6 @@ TextStyle textStyle = TextStyle(
   fontSize: 14,
   fontStyle: FontStyle.normal,
 );
-TextStyle textStyleSmallG = TextStyle(
-  color: Color.fromRGBO(126, 168, 129, 1),
-  fontWeight: FontWeight.normal,
-  fontSize: 14,
-  fontStyle: FontStyle.normal,
-);
 TextStyle textStyleSmall = TextStyle(
   color: Color.fromRGBO(126, 168, 129, 1),
   fontWeight: FontWeight.bold,
