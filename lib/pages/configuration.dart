@@ -45,7 +45,8 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
           ),
         ),
         backgroundColor: Colors.black,
-        body: Column(
+        body: SingleChildScrollView(
+        child:Column(
           children: <Widget>[
             Row(
               mainAxisAlignment:  MainAxisAlignment.center,
@@ -331,6 +332,6 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
             )
           ],
         )
-    );
+    ));
   }
 }

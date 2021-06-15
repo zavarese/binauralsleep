@@ -19,25 +19,58 @@ class HelpPageState extends State {
 
     return Scaffold(
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: Text("help",
-            style: textStyleActBar,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0), // here the desired height
+          child: AppBar(
+            title: Text("help",
+              style: textStyleActBar,
+              ),
             ),
           ),
-        body: Column(
+        body: SingleChildScrollView(
+          child:Column(
           children: <Widget>[
-            Padding(padding: const EdgeInsets.all(5.0)),
+            Padding(padding: const EdgeInsets.all(4.0)),
+            Row(
+                children: [
+                  SquareCustomState(
+                    squareCustom: SquareCustom(
+                      value: "BINAURAL BEATS",
+                      width: MediaQuery.of(context).size.width,
+                      height: 20,
+                      borderColor: Colors.blueGrey,
+                      textStyle: textStyle,
+                      backgroundColor: Color.fromRGBO(28, 27, 27, 1),
+                    ),
+                  )
+                ]
+            ),
+            Row(
+                children: [
+                  SquareCustomState(
+                    squareCustom: SquareCustom(
+                      value: "Binaural beats are generated when the sine waves within a close range are presented to each ear separately. For example, when the 400Hz tone is presented to the left ear and the 440Hz tone to the right, a beat of 40Hz is perceived, which appears subjectively to be located “inside” the head. This is the binaural beat percept.",
+                      width: MediaQuery.of(context).size.width,
+                      height: 110,
+                      borderColor: Colors.blueGrey,
+                      textStyle: textStyle,
+                      backgroundColor: Color.fromRGBO(28, 27, 27, 1),
+                    ),
+                  )
+                ]
+            ),
+            Padding(padding: const EdgeInsets.all(4.0)),
             Row(
               children: [
                 SquareCustomState(
                   squareCustom: SquareCustom(
                     value: "Characteristics of the Five Basic Brain Waves",
                     width: MediaQuery.of(context).size.width,
-                    height: 40,
+                    height: 20,
                     borderColor: Colors.blueGrey,
                     textStyle: textStyle,
                     backgroundColor: Color.fromRGBO(28, 27, 27, 1),
-                  ) ,
+                  ),
                 )
               ]
             ),
@@ -48,7 +81,7 @@ class HelpPageState extends State {
             rowTable(context, "Delta("+greekLatter(36)+")", "1–4Hz", "Sleep. In general, different levels of awareness are associated.", 45),
           ],
         ),
-    );
+    ));
   }
 
   Widget rowTable(BuildContext context, String waveName, String frequency, String description, double height) {
