@@ -92,7 +92,7 @@ class Config extends State  {
           'volumeWave': (volumeWaves/10).toString(),
           //'path': _loadedFile,
           'path': path,
-          'volumeNoise': (volumeMusic/10).toString(),
+          'volumeMusic': (volumeMusic/10).toString(),
           'decreasing': decreasing.toString(),
           'loop': loop.toString(),
       });

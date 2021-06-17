@@ -83,7 +83,7 @@ class HelpPageState extends State {
             rowTable(context, "Beta 1 ("+greekLatter(20)+")", "13–16Hz", "They are associated with a state of mental, intellectual activity, mostly with quiet, focused, introverted concentration.", 75),
             rowTable(context, "Alpha ("+greekLatter(9)+")", "9–12Hz", "Very relaxed, passive attention. They are associated with a state of relaxation and represent the brain shifting into an idling gear, waiting to respond when needed.", 90),
             rowTable(context, "Theta ("+greekLatter(5)+")", "5–8Hz", "Deeply relaxed, inward focused. Represent a day dreamy, spacey state of mind that is associated with mental inefficiency. Twilight zone between waking and sleep.", 90),
-            rowTable(context, "Delta ("+greekLatter(1)+")", "1–4Hz", "Sleep. In general, different levels of awareness are associated.", 45),
+            rowTable(context, "Delta ("+greekLatter(1)+")", "< 4Hz", "Sleep. In general, different levels of awareness are associated.", 45),
           ],
         ),
     ));

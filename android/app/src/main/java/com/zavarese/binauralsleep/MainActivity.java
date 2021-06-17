@@ -71,7 +71,7 @@ public class MainActivity extends FlutterActivity {
                                     Float.parseFloat(call.argument("volumeWave"))/10,
                                     Boolean.parseBoolean(call.argument("decreasing")),
                                     this.path,
-                                    Float.parseFloat(call.argument("volumeNoise"))/10,
+                                    Float.parseFloat(call.argument("volumeMusic"))/10,
                                     Boolean.parseBoolean(call.argument("loop")),
                                     this.uri
                             );

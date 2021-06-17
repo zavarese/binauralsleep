@@ -182,7 +182,15 @@ class RangeSliderCustomState  extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      child: RangeSlider(
+      child: SliderTheme(
+        data: SliderThemeData(
+          valueIndicatorColor: Color.fromRGBO(63, 111, 66, 1),
+          trackHeight: 4.0,
+          valueIndicatorTextStyle: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        child: RangeSlider(
         activeColor: Color.fromRGBO(63, 111, 66, 1),
         divisions: 38,
         min: 1.0,
@@ -191,7 +199,7 @@ class RangeSliderCustomState  extends StatelessWidget {
         labels: RangeLabels(sliderCustom.isoBeatMin.toInt().toString(), sliderCustom.isoBeatMax.toInt().toString()),
         onChanged: sliderCustom.function,
       ),
-    );
+    ));
   }
 }
 
@@ -216,7 +224,7 @@ class DisplayCustomState  extends StatelessWidget {
             color: Color.fromRGBO(63, 111, 66, 1),
           ),
         ),
-      width: 150,
+      width: 140,
       height: 50,
       child: Row(
         children: [
