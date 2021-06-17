@@ -8,13 +8,13 @@ import com.zavarese.binauralsleep.MainActivity;
 import java.io.IOException;
 
 public class FilePlayer {
-    public MediaPlayer currentPlayer = null;
+    public MediaPlayer currentPlayer;
     private Equalizer eqCurr;
     private Equalizer eqNext;
     private float volume;
     private String path;
     private int prepared;
-    private MediaPlayer nextPlayer = null;
+    private MediaPlayer nextPlayer;
     private short channel;
     private int sessionId1;
     private int sessionId2;
@@ -40,7 +40,7 @@ public class FilePlayer {
         this.eqCurr.setEnabled(true);
         short[] freqRange1 = this.eqCurr.getBandLevelRange();
         short minLvl1 = freqRange1[0];
-        this.eqCurr.setBandLevel((short) channel,minLvl1);
+        this.eqCurr.setBandLevel(channel,minLvl1);
 
     }
 
@@ -78,7 +78,7 @@ public class FilePlayer {
         this.eqNext.setEnabled(true);
         short[] freqRange2 = this.eqNext.getBandLevelRange();
         short minLvl2 = freqRange2[0];
-        this.eqNext.setBandLevel((short) channel,minLvl2);
+        this.eqNext.setBandLevel(channel,minLvl2);
 
         try {
             this.nextPlayer.setDataSource(this.mainActivity, uri);

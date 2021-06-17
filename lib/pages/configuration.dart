@@ -176,7 +176,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                       sliderCustom: RangeSliderCustom(
                         isoBeatMin: isoBeatMin,
                         isoBeatMax: isoBeatMax,
-                        function: setRangeFreqValues,
+                        function: (isPlaying=="true" ? null: setRangeFreqValues),
                       ),
                     ),
                     Text(
@@ -190,7 +190,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             valueMin: 100,
                             valueMax: 528,
                             division: 427,
-                            function: setFrequency
+                            function: (isPlaying=="true" ? null: setFrequency),
                         )
                     ),
                     Text(
@@ -204,7 +204,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             valueMin: 15.0,
                             valueMax: 60.0,
                             division: 44,
-                            function: setMinutes
+                            function: (isPlaying=="true" ? null: setMinutes),
                         )
                     ),
                     Text(
@@ -218,7 +218,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             valueMin: 10.0,
                             valueMax: 100.0,
                             division: 89,
-                            function: setVolumeWaves
+                            function: (isPlaying=="true" ? null: setVolumeWaves),
                         )
                     ),
                     Text(
@@ -232,7 +232,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             valueMin: 10.0,
                             valueMax: 100.0,
                             division: 89,
-                            function: setVolumeMusic
+                            function: (isPlaying=="true" ? null: setVolumeMusic),
                         )
                     ),
                     Padding(padding: const EdgeInsets.all(3.0)),

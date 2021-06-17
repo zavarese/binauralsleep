@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.audiofx.Equalizer;
 import android.net.Uri;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
@@ -20,19 +21,20 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
     private static final String CHANNEL = "com.zavarese.binauralsleep/binaural";
-    private Binaural binaural = new Binaural();
+    private Binaural binaural;
     private BinauralService wave;
     private static AudioManager audioManager;
-    private int sessionID1;
-    private int sessionID2;
-    private int sessionID3;
-    private int sessionID4;
+    private static int sessionID1;
+    private static int sessionID2;
+    private static int sessionID3;
+    private static int sessionID4;
     private ConfigDAO configDAO = new ConfigDAO(this);
     //private static final int CHOOSE_FILE_REQUESTCODE = 8777;
     private static final int PICKFILE_RESULT_CODE = 8778;
     private String path="";
     private Uri uri;
-    //private String audioID;
+    Equalizer eq1;
+    Equalizer eq2;
 
     @Override
     public void configureFlutterEngine(FlutterEngine flutterEngine) {
@@ -42,6 +44,11 @@ public class MainActivity extends FlutterActivity {
         sessionID2 = audioManager.generateAudioSessionId();
         sessionID3 = audioManager.generateAudioSessionId();
         sessionID4 = audioManager.generateAudioSessionId();
+
+        eq1 = new Equalizer(Integer.MAX_VALUE,sessionID1);
+        eq2 = new Equalizer(Integer.MAX_VALUE,sessionID2);
+
+        binaural = new Binaural(eq1, eq2, sessionID1, sessionID2, sessionID3, sessionID4, this);
 
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
                 .setMethodCallHandler((call, result) -> {
@@ -57,8 +64,7 @@ public class MainActivity extends FlutterActivity {
                                 this.path = call.argument("path");
                             }
 
-                            binaural.config(sessionID1, sessionID2, sessionID3, sessionID4,
-                                    Float.parseFloat(call.argument("frequency")),
+                            binaural.setConfig(Float.parseFloat(call.argument("frequency")),
                                     Float.parseFloat(call.argument("isoBeatMax")),
                                     Float.parseFloat(call.argument("isoBeatMin")),
                                     Float.parseFloat(call.argument("minutes")),
@@ -67,10 +73,8 @@ public class MainActivity extends FlutterActivity {
                                     this.path,
                                     Float.parseFloat(call.argument("volumeNoise"))/10,
                                     Boolean.parseBoolean(call.argument("loop")),
-                                    this.uri,
-                                    this
+                                    this.uri
                             );
-
 
                             wave = new BinauralService(this);
                             wave.execute(binaural);

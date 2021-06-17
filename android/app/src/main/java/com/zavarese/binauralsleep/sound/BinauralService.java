@@ -10,22 +10,19 @@ import android.os.Build;
 
 import com.zavarese.binauralsleep.MainActivity;
 import com.zavarese.binauralsleep.Utils;
-
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static com.zavarese.binauralsleep.sound.Binaural.paramMinutes;
 import static com.zavarese.binauralsleep.sound.Binaural.player;
 import static com.zavarese.binauralsleep.sound.Binaural.sessionId1;
 import static com.zavarese.binauralsleep.sound.Binaural.sessionId2;
 
 public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
 
-    private static float currentFrequency = 0;
-    private static String isPlaying = "true";
-    private static int paramAction;   // 0 - nothing; 1 - stop; 2 - kill
+    private float currentFrequency = 0;
+    private String isPlaying = "true";
+    private int paramAction;   // 0 - nothing; 1 - stop; 2 - kill
     AudioTrack audioTrack1;
     AudioTrack audioTrack2;
     private static final int LAST_MINUTES = 10;
@@ -87,7 +84,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         return Float.parseFloat(
                 String.format(
                         Locale.US, "%.1f",(
-                                (binaural.paramIsoBeatMax - binaural.paramIsoBeatMin)/(paramMinutes-LAST_MINUTES)
+                                (binaural.paramIsoBeatMax - binaural.paramIsoBeatMin)/(binaural.paramMinutes-LAST_MINUTES)
                         )
                 )
         );
@@ -105,6 +102,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         //int amplitudeMax = Utils.getAmplitudeMax(minSize);
 
         int amplitudeMax = Utils.getAdjustedAmplitudeMax(binaural.paramFrequency, minSize);
+        System.out.println("amplitudeMax = "+amplitudeMax);
 
         //period of the sine waves
         int sCountLeft = (int) ((float) sampleRate / freqLeft);
@@ -167,7 +165,7 @@ public class BinauralService extends AsyncTask<Binaural, Void, Integer> {
         audioNext.play();
         Utils.sleepThread(50);
         if(audioCurr!=null)audioCurr.setVolume(0.00001f);
-        audioNext.setVolume(0.05f);
+        audioNext.setVolume(volume/8);
         Utils.sleepThread(50);
         audioNext.setVolume(volume/4);
         Utils.sleepThread(50);

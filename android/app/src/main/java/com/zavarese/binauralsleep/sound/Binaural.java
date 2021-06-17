@@ -1,12 +1,8 @@
 package com.zavarese.binauralsleep.sound;
 
-import android.annotation.TargetApi;
 import android.media.audiofx.Equalizer;
 import android.net.Uri;
-import android.os.Build;
-
 import com.zavarese.binauralsleep.MainActivity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,13 +20,13 @@ public class Binaural extends Throwable{
     public String waveMin;
     public String waveMax;
     public boolean paramDecreasing;
-    public static float paramMinutes;
+    public float paramMinutes;
     public float paramVolume;
     public String paramPath;
     public String hasMusic;
     public String lastBeat;
-    public static Equalizer eq1;
-    public static Equalizer eq2;
+    public Equalizer eq1;
+    public Equalizer eq2;
     public static FilePlayer player;
     public static int sessionId1;
     public static int sessionId2;
@@ -41,6 +37,17 @@ public class Binaural extends Throwable{
     public MainActivity mainActivity;
 
     public Binaural(){};
+
+    public Binaural(Equalizer eq_1, Equalizer eq_2, int sessionID1, int sessionID2, int sessionID3, int sessionID4, MainActivity mainActivity){
+        this.eq1 = eq_1;
+        this.eq2 = eq_2;
+        this.mainActivity = mainActivity;
+
+        sessionId1 = sessionID1;
+        sessionId2 = sessionID2;
+        sessionId3 = sessionID3;
+        sessionId4 = sessionID4;
+    };
 
     public Binaural(int id, String name, float frequency, float isoBeatMin,  float isoBeatMax, boolean decreasing, String path){
         this.id = id;
@@ -67,25 +74,18 @@ public class Binaural extends Throwable{
         }
     }
 
-    public void config(int sessionID1, int sessionID2, int sessionID3, int sessionID4, float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeMusic, boolean loop, Uri uri, MainActivity mainActivity) {
+    public void setConfig(float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeMusic, boolean loop, Uri uri) {
 
         this.paramIsoBeatMax = isoBeatMax;
         this.paramIsoBeatMin = (isoBeatMin==0?0.1f:isoBeatMin);
         this.paramMinutes = minutes;
         this.paramFrequency = frequency;
-        this.paramVolume = volume;
+        this.paramVolume = (path.equals("")?volume:volume/3);
         this.paramDecreasing = decreasing;
         this.paramPath = path;
         this.paramLoop = loop;
         this.uri = uri;
-        this.mainActivity = mainActivity;
 
-        sessionId1 = sessionID1;
-        sessionId2 = sessionID2;
-        sessionId3 = sessionID3;
-        sessionId4 = sessionID4;
-
-        eq1 = new Equalizer(Integer.MAX_VALUE,sessionID1);
         eq1.setEnabled(true);
         short[] freqRange = eq1.getBandLevelRange();
         short minLvl = freqRange[0];
@@ -94,7 +94,6 @@ public class Binaural extends Throwable{
         short numBand = eq1.getNumberOfBands();
         int frequencyEq = Math.round(paramFrequency);
 
-        eq2 = new Equalizer(Integer.MAX_VALUE,sessionID2);
         eq2.setEnabled(true);
 
         eq1.setBandLevel((short) 0, maxLvl);
@@ -102,16 +101,16 @@ public class Binaural extends Throwable{
 
         for(short i=1;i<numBand;i++){
             if(frequencyEq>=getFreqMin(i) && frequencyEq<=getFreqMax(i)){
-                eq1.setBandLevel((short) i, maxLvl);
-                eq2.setBandLevel((short) i, maxLvl);
+                eq1.setBandLevel(i, maxLvl);
+                eq2.setBandLevel(i, maxLvl);
                 band = i;
             }else{
-                eq1.setBandLevel((short) i, minLvl);
-                eq2.setBandLevel((short) i, minLvl);
+                eq1.setBandLevel(i, minLvl);
+                eq2.setBandLevel(i, minLvl);
             }
         }
 
-        //paramPath="/storage/9C33-6BBD/Music/Novas/About A Girl - Nirvana.mp3";
+        System.out.println("band = "+band);
 
         if (!paramPath.equals("")&&!paramPath.equals("error")) {
                 player = new FilePlayer(
@@ -163,9 +162,5 @@ public class Binaural extends Throwable{
             return "";
         }
 
-    }
-
-    public void setUri(Uri uri){
-        this.uri = uri;
     }
 }
