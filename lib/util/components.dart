@@ -29,28 +29,24 @@ class ButtonCustomState extends StatelessWidget {
       colorBorder = button.color;
       colorText = Colors.black;
     }else{
-      colorBackground = Color.fromRGBO(28, 27, 27, 1);
+      colorBackground = Colors.black;
       colorBorder = button.color;
       colorText = button.color;
     }
 
-    return DecoratedBox(
-        decoration: ShapeDecoration(shape: Border(), color: colorBackground),
-        child: Theme(
-        data: Theme.of(context).copyWith(
-        buttonTheme: ButtonTheme.of(context).copyWith(
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)),
-        child: OutlineButton(
+    if(button.function==null){
+      colorBorder = Colors.black;
+    }
+
+    return OutlinedButton(
           child: Text(button.label,
             style: TextStyle(color: colorText,fontWeight: FontWeight.bold,fontSize: 13),
           ),
-          borderSide: BorderSide(
-            color: colorBorder,
-            width: 2,
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(width: 5.0, color: colorBorder),
+            backgroundColor: colorBackground
           ),
           onPressed: button.function,
-          )
-        )
     );
   }
 }
