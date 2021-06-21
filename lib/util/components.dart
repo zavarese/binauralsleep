@@ -43,6 +43,8 @@ class ButtonCustomState extends StatelessWidget {
             style: TextStyle(color: colorText,fontWeight: FontWeight.bold,fontSize: 13),
           ),
           style: OutlinedButton.styleFrom(
+            padding: EdgeInsets.all(14),
+            fixedSize: Size.fromWidth(90),
             side: BorderSide(width: 5.0, color: colorBorder),
             backgroundColor: colorBackground
           ),
@@ -74,6 +76,7 @@ class SliderCustomState  extends StatelessWidget {
           .of(context)
           .size
           .width,
+      height: 45,
       child: SliderTheme(
         data: SliderTheme.of(context).copyWith(
           trackShape: RoundedRectSliderTrackShape(),
@@ -178,6 +181,7 @@ class RangeSliderCustomState  extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
+      height: 45,
       child: SliderTheme(
         data: SliderThemeData(
           valueIndicatorColor: Color.fromRGBO(63, 111, 66, 1),
@@ -282,7 +286,7 @@ class SquareCustomState  extends StatelessWidget {
       ),
       width: squareCustom.width,
       height: squareCustom.height,
-      child: Text(squareCustom.value,  //Color.fromRGBO(63, 111, 66, 1)
+      child: SelectableText(squareCustom.value,  //Color.fromRGBO(63, 111, 66, 1)
         style: squareCustom.textStyle,
       ),
     );

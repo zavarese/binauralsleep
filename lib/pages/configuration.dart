@@ -243,9 +243,22 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: (isPlaying=="true" ? "   STOP  " : "   PLAY   "),
+                                    label: (isPlaying=="true" ? "STOP" : "PLAY"),
                                     active: (isPlaying=="true" ? true : false),
                                     function: (loading=="loading..."?null:playButton),
+                                    color: Colors.green,
+                                ),
+                              ),
+                            ]
+                        ),
+                        Column(children: <Widget>[SizedBox(width:2)]),
+                        Column(
+                            children: <Widget>[
+                              ButtonCustomState(
+                                button: ButtonCustom(
+                                    label: 'MUSIC',
+                                    active: (path==""||path=="error"?false:true),
+                                    function: (isPlaying=="false"?(path==""?musicButton:setEmptyMusic):null),
                                     color: Colors.orange,
                                 ),
                               ),
@@ -256,23 +269,10 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: ' MUSIC ',
-                                    active: (path==""||path=="error"?false:true),
-                                    function: (isPlaying=="false"?(path==""?musicButton:setEmptyMusic):null),
-                                    color: Colors.grey,
-                                ),
-                              ),
-                            ]
-                        ),
-                        Column(children: <Widget>[SizedBox(width:2)]),
-                        Column(
-                            children: <Widget>[
-                              ButtonCustomState(
-                                button: ButtonCustom(
-                                    label: '  LOOP  ',
+                                    label: 'LOOP',
                                     active: (loop==true?true:false),
                                     function: (isPlaying=="false"?loopButton:null),
-                                    color: Colors.grey,
+                                    color: Colors.orange,
                                 ),
                               ),
                             ]
@@ -280,13 +280,14 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                       ]
                     ),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment:  MainAxisAlignment.center,
                       children: <Widget>[
                         Column(
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: (decreasing==true?'  DOWN  ':'     UP     '),
+                                    label: (decreasing==true?'DOWN':'UP'),
                                     active: false,
                                     function: (isPlaying=="false"?upDownButton:null),
                                     color: Colors.green,
@@ -299,7 +300,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             children: <Widget>[
                               ButtonCustomState(
                                 button: ButtonCustom(
-                                    label: '  SAVE   ',
+                                    label: 'SAVE',
                                     active: false,
                                     function: (isPlaying=="true" || loading=="loading..."?null:(id==0?saveInsertButton:saveUpdateButton)),
                                     color: Colors.grey,
