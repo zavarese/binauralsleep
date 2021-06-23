@@ -19,11 +19,15 @@
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="Binaural Beats - MP3 Wav">
+        <!--
         <receiver android:name="com.zavarese.binauralsleep.sound.AudioSessionReceiver">
             <intent-filter>
                 <action android:name="android.media.action.OPEN_AUDIO_EFFECT_CONTROL_SESSION"/>
             </intent-filter>
         </receiver>
+        -->
+
+        <service android:name=".sound.BinauralServices" android:enabled="true" />
 
         <activity
             android:name=".MainActivity"

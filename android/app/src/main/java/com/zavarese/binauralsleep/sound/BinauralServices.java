@@ -12,7 +12,11 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
+
 import com.zavarese.binauralsleep.Utils;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -114,16 +118,16 @@ public class BinauralServices extends Service implements SoundListener {
                 }
 
                 currentFrequency = 0;
-                isPlaying = "false";
 
                 if (binaural.player != null && binaural.player.isPlaying()) {
                     binaural.player.stop();
+                    binaural.player.release();
                 }
+
+                isPlaying = "false";
             }catch (Exception e){
                 e.printStackTrace();
             }
-
-            interrupt();
         }
     }
 
@@ -151,7 +155,7 @@ public class BinauralServices extends Service implements SoundListener {
                 extras.getString("path"),
                 extras.getFloat("volumeMusic"),
                 extras.getBoolean("loop"),
-                (Uri)extras.get(Intent.EXTRA_STREAM)
+                (ArrayList<Uri>) extras.getSerializable(Intent.EXTRA_STREAM)
         );
 
         execThread.start();
@@ -192,17 +196,12 @@ public class BinauralServices extends Service implements SoundListener {
         if (audioTrack2 != null && audioTrack2.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
             stopAudio(audioTrack2);
         }
-
-        if(player != null && player.isPlaying()){
-            player.stop();
-            player.release();
-            player = null;
-        }
     }
 
     private void stopAudio(AudioTrack audioTrack) {
         if(audioTrack != null && audioTrack.getPlayState()==AudioTrack.PLAYSTATE_PLAYING) {
-            isPlaying = "false";
+            audioTrack.setVolume(0.00001f);
+            Utils.sleepThread(50);
             audioTrack.setVolume(0f);
             Utils.sleepThread(50);
             audioTrack.stop();

@@ -1,28 +1,37 @@
 package com.zavarese.binauralsleep;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.audiofx.Equalizer;
 import android.net.Uri;
+import android.os.IBinder;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.view.View;
 import android.widget.Toast;
 import com.zavarese.binauralsleep.dao.ConfigDAO;
 import com.zavarese.binauralsleep.sound.Binaural;
 import com.zavarese.binauralsleep.sound.BinauralService;
+import com.zavarese.binauralsleep.sound.BinauralServices;
+import com.zavarese.binauralsleep.sound.SoundListener;
+
+import java.util.ArrayList;
+
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
-public class MainActivity extends FlutterActivity {
+public class MainActivity extends FlutterActivity implements ServiceConnection {
     private static final String CHANNEL = "com.zavarese.binauralsleep/binaural";
     private Binaural binaural;
-    private BinauralService wave;
+    //private BinauralService wave;
     private static AudioManager audioManager;
     private static int sessionID1;
     private static int sessionID2;
@@ -33,8 +42,13 @@ public class MainActivity extends FlutterActivity {
     private static final int PICKFILE_RESULT_CODE = 8778;
     private String path="";
     private Uri uri;
-    Equalizer eq1;
-    Equalizer eq2;
+    private ServiceConnection connection;
+    Intent intent;
+    private SoundListener soundListener;
+    //Equalizer eq1;
+    //Equalizer eq2;
+    ArrayList<Uri> uris;
+
 
     @Override
     public void configureFlutterEngine(FlutterEngine flutterEngine) {
@@ -45,18 +59,19 @@ public class MainActivity extends FlutterActivity {
         sessionID3 = audioManager.generateAudioSessionId();
         sessionID4 = audioManager.generateAudioSessionId();
 
-        eq1 = new Equalizer(Integer.MAX_VALUE,sessionID1);
-        eq2 = new Equalizer(Integer.MAX_VALUE,sessionID2);
+        //eq1 = new Equalizer(Integer.MAX_VALUE,sessionID1);
+        //eq2 = new Equalizer(Integer.MAX_VALUE,sessionID2);
 
-        binaural = new Binaural(eq1, eq2, sessionID1, sessionID2, sessionID3, sessionID4, this);
+        //binaural = new Binaural(eq1, eq2, sessionID1, sessionID2, sessionID3, sessionID4, this);
+        binaural = new Binaural();
+
+        connection = this;
 
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
                 .setMethodCallHandler((call, result) -> {
                     switch (call.method) {
 
                         case "play":
-                            System.out.println("call.argument(path) = "+call.argument("path"));
-                            //broadcastIntent();
 
                             if (this.path.equals("error")) {
                                 this.path = "";
@@ -64,6 +79,26 @@ public class MainActivity extends FlutterActivity {
                                 this.path = call.argument("path");
                             }
 
+                            intent = new Intent(this, BinauralServices.class);
+
+                            intent.putExtra("sessionId1",sessionID1);
+                            intent.putExtra("sessionId2",sessionID2);
+                            intent.putExtra("sessionId3",sessionID3);
+                            intent.putExtra("sessionId4",sessionID4);
+                            intent.putExtra("frequency",Float.parseFloat(call.argument("frequency").toString()));
+                            intent.putExtra("isoBeatMax",Float.parseFloat(call.argument("isoBeatMax").toString()));
+                            intent.putExtra("isoBeatMin",Float.parseFloat(call.argument("isoBeatMin").toString()));
+                            intent.putExtra("minutes",Float.parseFloat(call.argument("minutes").toString()));
+                            intent.putExtra("volumeWave",Float.parseFloat(call.argument("volumeWave"))/10);
+                            intent.putExtra("decreasing",Boolean.parseBoolean(call.argument("decreasing").toString()));
+                            intent.putExtra("path",this.path);
+                            intent.putExtra("volumeMusic",Float.parseFloat(call.argument("volumeMusic"))/10);
+                            intent.putExtra("loop",Boolean.parseBoolean(call.argument("loop").toString()));
+                            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
+
+                            startService();
+
+/*
                             binaural.setConfig(Float.parseFloat(call.argument("frequency")),
                                     Float.parseFloat(call.argument("isoBeatMax")),
                                     Float.parseFloat(call.argument("isoBeatMin")),
@@ -79,16 +114,20 @@ public class MainActivity extends FlutterActivity {
                             wave = new BinauralService(this);
                             wave.execute(binaural);
 
+ */
+
                             result.success(this.path);
                             break;
 
                         case "stop" :
-                            wave.stop(binaural.paramVolume, 1);
+                            //wave.stop(binaural.paramVolume, 1);
+                            stopService();
                             result.success("");
                             break;
 
                         case "track" :
-                            result.success(wave.getCurrentFrequency()+"");
+                            //result.success(wave.getCurrentFrequency()+"");
+                            result.success(soundListener.getCurrentFrequency()+"");
                             break;
 
                         case "init" :
@@ -96,7 +135,8 @@ public class MainActivity extends FlutterActivity {
                             break;
 
                         case "playing" :
-                            result.success(wave.isPlaying());
+                            //result.success(wave.isPlaying());
+                            result.success(soundListener.isPlaying()+"");
                             break;
 
                         case "insert" :
@@ -138,7 +178,6 @@ public class MainActivity extends FlutterActivity {
                             break;
 
                         case "list" :
-                            System.out.println("LIST BD");
                             result.success(binaural.toJSON(configDAO.listConfig()));
                             break;
 
@@ -158,7 +197,8 @@ public class MainActivity extends FlutterActivity {
     }
 
     protected void onDestroy() {
-        wave.stop(binaural.paramVolume,2);
+        //wave.stop(binaural.paramVolume,2);
+        stopService();
         super.onDestroy();
     }
 
@@ -167,30 +207,26 @@ public class MainActivity extends FlutterActivity {
         super.onResume();
     }
 
-/*
-    private void getSessions(){
-        MediaSessionManager mediaSessionManager =  (MediaSessionManager) getApplicationContext().getSystemService(Context.MEDIA_SESSION_SERVICE);
-
-        try {
-            List<MediaController> mediaControllerList = mediaSessionManager.getActiveSessions
-                    (new ComponentName(getApplicationContext(), NotificationReceiverService.class));
-            for (MediaController m : mediaControllerList) {
-                String packageName = m.getPackageName();
-                MediaController.PlaybackInfo id = m.getPlaybackInfo();
-                AudioAttributes a = id.getAudioAttributes();1
-            }
-        } catch (SecurityException e) {
-        }
+    private void startService() {
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        startService(intent);
     }
 
-
-    public void broadcastIntent() {
-        Intent intent = new Intent();
-        intent.setAction("android.media.action.OPEN_AUDIO_EFFECT_CONTROL_SESSION");
-        sendBroadcast(intent);
+    private void stopService() {
+        stopService(intent);
+        unbindService(connection);
     }
 
- */
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder service) {
+        BinauralServices.Controller controller = (BinauralServices.Controller) service;
+        soundListener = controller.getSoundListener();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+
+    }
 
     private void spanMessage(String message){
         SpannableString spannableString = new SpannableString(message);
@@ -212,6 +248,7 @@ public class MainActivity extends FlutterActivity {
         intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         String[] mimetypes = {"audio/mpeg", "audio/x-wav"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
 
@@ -222,15 +259,24 @@ public class MainActivity extends FlutterActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        uris = new ArrayList<Uri>();
+
         if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK){
-            this.uri = data.getData();
-            this.path = uri.getPath();
-            System.out.println("this.path = "+uri.getPath());
+            if(null != data) { // checking empty selection
+                if(null != data.getClipData()) { // checking multiple selection or not
+                    for(int i = 0; i < data.getClipData().getItemCount(); i++) {
+                        uris.add(data.getClipData().getItemAt(i).getUri());
+                    }
+                } else {
+                    uris.add(data.getData());
+                }
+                this.path = "ok";
+
+            }
+
             //this.audioID = data.getDataString();
         }else{
-            System.out.println("********* ERROR *************");
             this.path = "error";
         }
     }
-
 }

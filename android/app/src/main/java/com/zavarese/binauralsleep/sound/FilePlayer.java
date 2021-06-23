@@ -1,11 +1,15 @@
 package com.zavarese.binauralsleep.sound;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
 
 import com.zavarese.binauralsleep.MainActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class FilePlayer {
     public MediaPlayer currentPlayer;
@@ -13,27 +17,29 @@ public class FilePlayer {
     private Equalizer eqNext;
     private float volume;
     private String path;
-    private int prepared;
     private MediaPlayer nextPlayer;
     private short channel;
     private int sessionId1;
     private int sessionId2;
     private boolean loop;
+    private ArrayList<Uri> tracks;
     private Uri uri;
+    private int currentTrack;
+    private BinauralServices binauralServices;
     private MainActivity mainActivity;
 
-    public FilePlayer(String path, float volume, short channel, int sessionId1, int sessionId2, boolean loop, Uri uri, MainActivity mainActivity){
+    public FilePlayer(String path, float volume, short channel, int sessionId1, int sessionId2, boolean loop, ArrayList<Uri> uris, BinauralServices binauralServices){
         this.path = path;
         this.volume = volume;
         this.currentPlayer = new MediaPlayer();
         this.nextPlayer = new MediaPlayer();
-        this.prepared = 0;
         this.channel = channel;
         this.sessionId1 = sessionId1;
         this.sessionId2 = sessionId2;
         this.loop = loop;
-        this.uri = uri;
-        this.mainActivity = mainActivity;
+        this.tracks = uris;
+        this.binauralServices = binauralServices;
+        this.currentTrack = 0;
 
         this.currentPlayer.setAudioSessionId(this.sessionId1);
         this.eqCurr = new Equalizer(Integer.MAX_VALUE,this.sessionId1);
@@ -70,7 +76,15 @@ public class FilePlayer {
         }
     }
 
-    private void createNextMediaPlayer() {
+    private void nextMediaPlayer() {
+        if(this.currentTrack==0 && !this.loop){
+            return;
+        }
+
+        if(this.loop){
+            this.currentTrack = getNextIndexTrack(this.currentTrack, this.tracks.size());
+        }
+
         this.nextPlayer = new MediaPlayer();
 
         this.nextPlayer.setAudioSessionId(this.sessionId2);
@@ -81,7 +95,7 @@ public class FilePlayer {
         this.eqNext.setBandLevel(channel,minLvl2);
 
         try {
-            this.nextPlayer.setDataSource(this.mainActivity, uri);
+            this.nextPlayer.setDataSource(this.binauralServices, tracks.get(currentTrack));
             this.nextPlayer.setVolume((float) volume, (float) volume);
             this.nextPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -92,6 +106,11 @@ public class FilePlayer {
                 }
             });
             nextPlayer.prepareAsync();
+
+            if(!this.loop){
+                this.currentTrack = getNextIndexTrack(this.currentTrack, this.tracks.size());
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,33 +121,44 @@ public class FilePlayer {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     currentPlayer = nextPlayer;
-                    createNextMediaPlayer();
+                    nextMediaPlayer();
                     mediaPlayer.release();
                 }
             };
 
     public void play() throws IOException{
-        System.out.println("FilePlayer path: "+uri.getPath());
-        currentPlayer.setDataSource(this.mainActivity, uri);
+
+        currentPlayer.setDataSource(this.binauralServices, tracks.get(this.currentTrack));
         currentPlayer.setVolume(this.volume, this.volume);
 
-        if(!loop){
-            currentPlayer.prepare();
-            currentPlayer.start();
-        }else{
-            currentPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    prepared = 1;
-                    currentPlayer.start();
-                }
-            });
-            currentPlayer.prepareAsync();
-            createNextMediaPlayer();
+        currentPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                currentPlayer.start();
+            }
+        });
+        currentPlayer.prepareAsync();
+
+
+        if(this.loop) {
+            nextMediaPlayer();
         }
+
+        if(!this.loop && this.tracks.size()>1) {
+            this.currentTrack = getNextIndexTrack(this.currentTrack, this.tracks.size());
+            nextMediaPlayer();
+        }
+
     }
 
-    public int getPrepared(){
-        return this.prepared;
+    private int getNextIndexTrack(int currIndex, int size){
+        int index = currIndex;
+        index++;
+        if(size==index){
+            index = 0;
+        }
+
+        return index;
     }
+
 }

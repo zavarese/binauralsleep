@@ -2,6 +2,9 @@ package com.zavarese.binauralsleep.sound;
 
 import android.media.audiofx.Equalizer;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
+
 import com.zavarese.binauralsleep.MainActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,10 +36,23 @@ public class Binaural extends Throwable{
     public static int sessionId3;
     public static int sessionId4;
     public boolean paramLoop = true;
-    public Uri uri;
+    public ArrayList<Uri> uris;
+    public BinauralServices binauralServices;
     public MainActivity mainActivity;
 
     public Binaural(){};
+
+    public Binaural(int sessionID1, int sessionID2, int sessionID3, int sessionID4, BinauralServices binauralServices){
+        this.binauralServices = binauralServices;
+
+        sessionId1 = sessionID1;
+        sessionId2 = sessionID2;
+        sessionId3 = sessionID3;
+        sessionId4 = sessionID4;
+
+        eq1 = new Equalizer(Integer.MAX_VALUE,sessionID1);
+        eq2 = new Equalizer(Integer.MAX_VALUE,sessionID2);
+    };
 
     public Binaural(Equalizer eq_1, Equalizer eq_2, int sessionID1, int sessionID2, int sessionID3, int sessionID4, MainActivity mainActivity){
         this.eq1 = eq_1;
@@ -48,6 +64,7 @@ public class Binaural extends Throwable{
         sessionId3 = sessionID3;
         sessionId4 = sessionID4;
     };
+
 
     public Binaural(int id, String name, float frequency, float isoBeatMin,  float isoBeatMax, boolean decreasing, String path){
         this.id = id;
@@ -74,17 +91,17 @@ public class Binaural extends Throwable{
         }
     }
 
-    public void setConfig(float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeMusic, boolean loop, Uri uri) {
+    public void setConfig(float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeMusic, boolean loop, ArrayList<Uri> uris) {
 
         this.paramIsoBeatMax = isoBeatMax;
         this.paramIsoBeatMin = (isoBeatMin==0?0.1f:isoBeatMin);
         this.paramMinutes = minutes;
         this.paramFrequency = frequency;
-        this.paramVolume = (path.equals("")?volume:volume/3);
+        this.paramVolume = volume;
         this.paramDecreasing = decreasing;
         this.paramPath = path;
         this.paramLoop = loop;
-        this.uri = uri;
+        this.uris = uris;
 
         eq1.setEnabled(true);
         short[] freqRange = eq1.getBandLevelRange();
@@ -110,14 +127,23 @@ public class Binaural extends Throwable{
             }
         }
 
-        System.out.println("band = "+band);
-
         if (!paramPath.equals("")&&!paramPath.equals("error")) {
                 player = new FilePlayer(
                         paramPath,
-                        Float.parseFloat(volumeMusic + ""), (short) band, sessionId3, sessionId4, this.paramLoop, this.uri, this.mainActivity);
+                        Float.parseFloat(volumeMusic + ""), (short) band, sessionId3, sessionId4, this.paramLoop, this.uris, this.binauralServices);
 
         }
+
+        /*
+
+        if (!paramPath.equals("")&&!paramPath.equals("error")) {
+            player = new FilePlayer(
+                    paramPath,
+                    Float.parseFloat(volumeMusic + ""), (short) band, sessionId3, sessionId4, this.paramLoop, this.uri, this.mainActivity);
+
+        }
+
+         */
     }
 
     public int getFreqMin(short channel){
