@@ -23,19 +23,27 @@ class ButtonCustomState extends StatelessWidget {
     Color colorBackground;
     Color colorBorder;
     Color colorText;
+    double borderWidth;
 
     if(button.active){
       colorBackground = button.color;
       colorBorder = button.color;
       colorText = Colors.black;
+      borderWidth = 2;
     }else{
       colorBackground = Colors.black;
       colorBorder = button.color;
       colorText = button.color;
+      borderWidth = 5;
     }
 
     if(button.function==null){
       colorBorder = Colors.black;
+    }
+
+    if(button.label == "STOP"){
+      colorBackground = Colors.red;
+      colorBorder = Colors.red;
     }
 
     return OutlinedButton(
@@ -45,7 +53,7 @@ class ButtonCustomState extends StatelessWidget {
           style: OutlinedButton.styleFrom(
             padding: EdgeInsets.all(14),
             fixedSize: Size.fromWidth(90),
-            side: BorderSide(width: 5.0, color: colorBorder),
+            side: BorderSide(width: borderWidth, color: colorBorder),
             backgroundColor: colorBackground
           ),
           onPressed: button.function,

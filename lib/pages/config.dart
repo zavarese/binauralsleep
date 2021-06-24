@@ -70,19 +70,7 @@ class Config extends State  {
   //Play configuration
   Future<void> _play() async {
     String response = "";
-/*
-    if(result != null) {
-      _loadedFile = file.path;
-      path = _loadedFile;
-    }else{
-      if(path == null) {
-        _loadedFile = "none";
-      }else{
-        _loadedFile = path;
-      }
-    }
-    debugPrint("********************** PLAY PATH: "+path);
- */
+
     try {
       response = await platform.invokeMethod('play', <String, dynamic>{
           'frequency': frequency.toString(),
@@ -90,7 +78,6 @@ class Config extends State  {
           'isoBeatMin': isoBeatMin.toInt().toString(),
           'minutes': minutes.toString(),
           'volumeWave': (volumeWaves/10).toString(),
-          //'path': _loadedFile,
           'path': path,
           'volumeMusic': (volumeMusic/10).toString(),
           'decreasing': decreasing.toString(),
@@ -256,18 +243,7 @@ class Config extends State  {
     String response = "";
 
     setState(() {loading = "loading...";});
-/*
-    result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['mp3', 'wav'],
-    );
 
-    //String uri = await FilePicker.platform.getDirectoryPath();
-
-    if(result != null) {
-      file = File(result.files.single.path);
-    }
-*/
     try {
       path = await platform.invokeMethod('file_explorer');
 
@@ -384,7 +360,6 @@ class Config extends State  {
   void setEmptyMusic(){
     if(isPlaying=="false") {
       setState(() {
-        //result = null;
         path = "";
       });
     }

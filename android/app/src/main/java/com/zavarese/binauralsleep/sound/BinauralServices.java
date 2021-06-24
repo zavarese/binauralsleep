@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static com.zavarese.binauralsleep.sound.Binaural.player;
-
 public class BinauralServices extends Service implements SoundListener {
     private float currentFrequency = 0;
     private String isPlaying = "true";
@@ -173,8 +171,6 @@ public class BinauralServices extends Service implements SoundListener {
     public void onDestroy() {
         // The service is no longer used and is being destroyed
         stop();
-        binaural = null;
-
         super.onDestroy();
     }
 
@@ -199,16 +195,18 @@ public class BinauralServices extends Service implements SoundListener {
     }
 
     private void stopAudio(AudioTrack audioTrack) {
-        if(audioTrack != null && audioTrack.getPlayState()==AudioTrack.PLAYSTATE_PLAYING) {
-            audioTrack.setVolume(0.00001f);
-            Utils.sleepThread(50);
-            audioTrack.setVolume(0f);
-            Utils.sleepThread(50);
-            audioTrack.stop();
-            Utils.sleepThread(50);
-            audioTrack.flush();
-            audioTrack.release();
-        }
+        try {
+            if (audioTrack != null && audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                audioTrack.setVolume(0.00001f);
+                Utils.sleepThread(50);
+                audioTrack.setVolume(0f);
+                Utils.sleepThread(50);
+                audioTrack.stop();
+                Utils.sleepThread(50);
+                audioTrack.flush();
+                audioTrack.release();
+            }
+        }catch (Exception ignored){}
     }
 
     private static float increment(Binaural binaural) {
@@ -295,8 +293,9 @@ public class BinauralServices extends Service implements SoundListener {
 
         audioNext.play();
         Utils.sleepThread(50);
-        if(audioCurr!=null)audioCurr.setVolume(0.00001f);
         audioNext.setVolume(volume/8);
+        Utils.sleepThread(25);
+        if(audioCurr!=null)audioCurr.setVolume(0.00001f);
         Utils.sleepThread(50);
         audioNext.setVolume(volume/4);
         Utils.sleepThread(50);

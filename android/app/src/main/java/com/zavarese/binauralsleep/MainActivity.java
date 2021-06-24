@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Toast;
 import com.zavarese.binauralsleep.dao.ConfigDAO;
 import com.zavarese.binauralsleep.sound.Binaural;
-import com.zavarese.binauralsleep.sound.BinauralService;
 import com.zavarese.binauralsleep.sound.BinauralServices;
 import com.zavarese.binauralsleep.sound.SoundListener;
 
@@ -31,7 +30,6 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 public class MainActivity extends FlutterActivity implements ServiceConnection {
     private static final String CHANNEL = "com.zavarese.binauralsleep/binaural";
     private Binaural binaural;
-    //private BinauralService wave;
     private static AudioManager audioManager;
     private static int sessionID1;
     private static int sessionID2;
@@ -45,8 +43,6 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
     private ServiceConnection connection;
     Intent intent;
     private SoundListener soundListener;
-    //Equalizer eq1;
-    //Equalizer eq2;
     ArrayList<Uri> uris;
 
 
@@ -58,14 +54,9 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
         sessionID2 = audioManager.generateAudioSessionId();
         sessionID3 = audioManager.generateAudioSessionId();
         sessionID4 = audioManager.generateAudioSessionId();
-
-        //eq1 = new Equalizer(Integer.MAX_VALUE,sessionID1);
-        //eq2 = new Equalizer(Integer.MAX_VALUE,sessionID2);
-
-        //binaural = new Binaural(eq1, eq2, sessionID1, sessionID2, sessionID3, sessionID4, this);
         binaural = new Binaural();
-
         connection = this;
+        uris = new ArrayList<Uri>();
 
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
                 .setMethodCallHandler((call, result) -> {
@@ -73,11 +64,7 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
 
                         case "play":
 
-                            if (this.path.equals("error")) {
-                                this.path = "";
-                            }else{
-                                this.path = call.argument("path");
-                            }
+                            this.path = call.argument("path");
 
                             intent = new Intent(this, BinauralServices.class);
 
@@ -98,35 +85,15 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
 
                             startService();
 
-/*
-                            binaural.setConfig(Float.parseFloat(call.argument("frequency")),
-                                    Float.parseFloat(call.argument("isoBeatMax")),
-                                    Float.parseFloat(call.argument("isoBeatMin")),
-                                    Float.parseFloat(call.argument("minutes")),
-                                    Float.parseFloat(call.argument("volumeWave"))/10,
-                                    Boolean.parseBoolean(call.argument("decreasing")),
-                                    this.path,
-                                    Float.parseFloat(call.argument("volumeMusic"))/10,
-                                    Boolean.parseBoolean(call.argument("loop")),
-                                    this.uri
-                            );
-
-                            wave = new BinauralService(this);
-                            wave.execute(binaural);
-
- */
-
                             result.success(this.path);
                             break;
 
                         case "stop" :
-                            //wave.stop(binaural.paramVolume, 1);
                             stopService();
                             result.success("");
                             break;
 
                         case "track" :
-                            //result.success(wave.getCurrentFrequency()+"");
                             result.success(soundListener.getCurrentFrequency()+"");
                             break;
 
@@ -135,7 +102,6 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
                             break;
 
                         case "playing" :
-                            //result.success(wave.isPlaying());
                             result.success(soundListener.isPlaying()+"");
                             break;
 
@@ -197,7 +163,6 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
     }
 
     protected void onDestroy() {
-        //wave.stop(binaural.paramVolume,2);
         stopService();
         super.onDestroy();
     }
@@ -260,7 +225,6 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
         super.onActivityResult(requestCode, resultCode, data);
 
         uris = new ArrayList<Uri>();
-
         if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK){
             if(null != data) { // checking empty selection
                 if(null != data.getClipData()) { // checking multiple selection or not
@@ -271,7 +235,6 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
                     uris.add(data.getData());
                 }
                 this.path = "ok";
-
             }
 
             //this.audioID = data.getDataString();

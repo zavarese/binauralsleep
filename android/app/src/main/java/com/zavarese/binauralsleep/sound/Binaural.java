@@ -127,34 +127,23 @@ public class Binaural extends Throwable{
             }
         }
 
-        if (!paramPath.equals("")&&!paramPath.equals("error")) {
-                player = new FilePlayer(
-                        paramPath,
-                        Float.parseFloat(volumeMusic + ""), (short) band, sessionId3, sessionId4, this.paramLoop, this.uris, this.binauralServices);
-
-        }
-
-        /*
-
-        if (!paramPath.equals("")&&!paramPath.equals("error")) {
+        if (uris.size()>0 && path.equals("ok")) {
             player = new FilePlayer(
-                    paramPath,
-                    Float.parseFloat(volumeMusic + ""), (short) band, sessionId3, sessionId4, this.paramLoop, this.uri, this.mainActivity);
-
+                        Float.parseFloat(volumeMusic + ""), band, sessionId3, this.paramLoop, this.uris, this.binauralServices);
+        }else{
+            player = null;
         }
-
-         */
     }
 
     public int getFreqMin(short channel){
         Equalizer eq = new Equalizer(Integer.MAX_VALUE,1);
-        int[] frequencyBand = eq.getBandFreqRange((short)channel);
+        int[] frequencyBand = eq.getBandFreqRange(channel);
         return frequencyBand[0]/1000;
     }
 
     public int getFreqMax(short channel){
         Equalizer eq = new Equalizer(Integer.MAX_VALUE,1);
-        int[] frequencyBand = eq.getBandFreqRange((short)channel);
+        int[] frequencyBand = eq.getBandFreqRange(channel);
         return frequencyBand[1]/1000;
     }
 
