@@ -293,14 +293,12 @@ public class BinauralServices extends Service implements SoundListener {
 
         audioNext.play();
         Utils.sleepThread(50);
-        audioNext.setVolume(volume/8);
-        Utils.sleepThread(25);
         if(audioCurr!=null)audioCurr.setVolume(0.00001f);
-        Utils.sleepThread(50);
         audioNext.setVolume(volume/4);
-        Utils.sleepThread(50);
+
 
         if (audioCurr != null && audioCurr.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+            Utils.sleepThread(50);
             audioCurr.pause();
             Utils.sleepThread(50);
             audioCurr.flush();
