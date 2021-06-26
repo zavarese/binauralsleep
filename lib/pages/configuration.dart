@@ -16,14 +16,15 @@ class ConfigPage extends StatefulWidget {
   String path;
   double frequency;
   bool decreasing;
-  ConfigPage(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing);
+  double minutes;
+  ConfigPage(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing,this.minutes);
   @override
-  Config createState() => new ConfigPageState(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing);
+  Config createState() => new ConfigPageState(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing,this.minutes);
 }
 
 class ConfigPageState extends Config with WidgetsBindingObserver  {
 
-  ConfigPageState(int id, String name, double isoBeatMin, double isoBeatMax, String waveMin, String waveMax, String path, double frequency, bool decreasing) : super(id, name, isoBeatMin, isoBeatMax, waveMin, waveMax, path, frequency, decreasing);
+  ConfigPageState(int id, String name, double isoBeatMin, double isoBeatMax, String waveMin, String waveMax, String path, double frequency, bool decreasing, double minutes) : super(id, name, isoBeatMin, isoBeatMax, waveMin, waveMax, path, frequency, decreasing, minutes);
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +204,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             value: minutes,
                             valueMin: 15.0,
                             valueMax: 60.0,
-                            division: 44,
+                            division: 45,
                             function: (isPlaying=="true" ? null: setMinutes),
                         )
                     ),

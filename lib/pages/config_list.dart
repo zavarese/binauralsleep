@@ -33,7 +33,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
         ),
     floatingActionButton:  FloatingActionButton(
         onPressed: () {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",6,12,"","","",200,true)));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ConfigPage(0,"",6,12,"","","",200,true,30)));
         },
         child: Icon(Icons.add_to_photos_rounded),
         backgroundColor: Colors.blueAccent,
@@ -59,6 +59,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                       "", //nDataList.path,
                       double.parse(nDataList.frequency.toString()),
                       nDataList.decreasing,
+                      double.parse(nDataList.minutes.toString()),
                     )
                 ));
               },
@@ -88,7 +89,7 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                       :Text("\u2193"+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase()+'\n'+
                         "  "+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase(), //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)),
-                    trailing: Text(nDataList.frequency.toString()+"Hz",
+                    trailing: Text(nDataList.frequency.toString()+"Hz\n"+nDataList.minutes.toString()+"min",
                       style: textStyleMidO,),
                     //isThreeLine: true,
                   ),

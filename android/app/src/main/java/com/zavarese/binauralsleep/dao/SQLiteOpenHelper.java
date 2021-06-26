@@ -17,6 +17,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
     static final String KEY_BEAT_END = "beat_end";
     static final String KEY_FREQUENCY = "frequency";
     static final String KEY_DECREASE = "decrease";
+    static final String KEY_TIME = "time";
     static final String KEY_PATH = "path";
 
     private static final int DATABASE_VERSION = 1;
@@ -28,7 +29,25 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + KEY_BEAT_END + " TEXT, "
             + KEY_FREQUENCY + " TEXT, "
             + KEY_DECREASE + " TEXT, "
+            + KEY_TIME + " TEXT, "
             + KEY_PATH + " TEXT);";
+
+    private static final String DATABASE_ALTER_1 = "INSERT INTO "
+            + TABLE_NAME + " ("
+            + KEY_NOME  + ","
+            + KEY_BEAT_INI  + ","
+            + KEY_BEAT_END  + ","
+            + KEY_FREQUENCY  + ","
+            + KEY_DECREASE  + ","
+            + KEY_TIME  + ","
+            + KEY_PATH  + ","
+            + ") VALUES ("
+            + "\"Relaxing\","
+            + "\"20\","
+            + "\"13\","
+            + "\"432\","
+            + "\"60\","
+            + "\"\")";
 
 /*
     private static final String DATABASE_ALTER_1 = "ALTER TABLE "

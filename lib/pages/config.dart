@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:binauralsleep/util/shared_prefs.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -20,12 +18,13 @@ class Config extends State  {
   String waveMax;
   String path;
   bool decreasing;
-  double minutes = sharedPrefs.minutes;
+  double minutes;
   double volumeMusic = sharedPrefs.volumeMusic;
   double volumeWaves = sharedPrefs.volumeWaves;
   bool loop = true;
 
-  Config(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing);
+
+  Config(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing, this.minutes);
 
   static const platform = const MethodChannel('com.zavarese.binauralsleep/binaural');
   String _responseFromNativeCode = '';
@@ -189,6 +188,7 @@ class Config extends State  {
         'isoBeatMin': isoBeatMin.toString(),
         'decreasing': decreasing.toString(),
         'path': path,
+        'minutes': minutes.toString(),
       });
 
       response = value;
@@ -215,6 +215,7 @@ class Config extends State  {
         'isoBeatMin': isoBeatMin.toString(),
         'decreasing': decreasing.toString(),
         'path': path,
+        'minutes': minutes.toString(),
       });
       response = value;
     } on PlatformException catch (e) {
@@ -339,7 +340,6 @@ class Config extends State  {
   void setMinutes(double value) {
     setState(() {
       minutes = value;
-      sharedPrefs.minutes = minutes;
     });
   }
 

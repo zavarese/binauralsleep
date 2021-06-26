@@ -8,10 +8,6 @@ class SharedPrefs {
       _sharedPrefs = await SharedPreferences.getInstance();
     }
   }
-
-  double get minutes => _sharedPrefs.getDouble("minutes") ?? 30;
-  set minutes(double value) => _sharedPrefs.setDouble("minutes", value);
-
   double get volumeMusic => _sharedPrefs.getDouble("volumeMusic") ?? 90;
   set volumeMusic(double value) => _sharedPrefs.setDouble("volumeMusic", value);
 

@@ -18,7 +18,7 @@
         android:requestLegacyExternalStorage="true"
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="Binaural Beats - MP3 Wav">
+        android:label="Binaural Beats Music">
         <!--
         <receiver android:name="com.zavarese.binauralsleep.sound.AudioSessionReceiver">
             <intent-filter>

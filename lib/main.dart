@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Binaural Beats - MP3 Wav',
+      title: 'Binaural Beats Music',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home: Splash(),
