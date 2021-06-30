@@ -24,6 +24,7 @@ public class Binaural extends Throwable{
     public String waveMax;
     public boolean paramDecreasing;
     public float paramMinutes;
+    public float paramSeconds;
     public float paramVolume;
     public String paramPath;
     public String hasMusic;
@@ -92,7 +93,7 @@ public class Binaural extends Throwable{
         }
     }
 
-    public void setConfig(float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeMusic, boolean loop, ArrayList<Uri> uris) {
+    public void setConfig(float frequency, float isoBeatMax, float isoBeatMin, float minutes, float volume, boolean decreasing, String path, float volumeMusic, boolean loop, ArrayList<Uri> uris, float seconds) {
 
         this.paramIsoBeatMax = isoBeatMax;
         this.paramIsoBeatMin = (isoBeatMin==0?0.1f:isoBeatMin);
@@ -103,6 +104,7 @@ public class Binaural extends Throwable{
         this.paramPath = path;
         this.paramLoop = loop;
         this.uris = uris;
+        this.paramSeconds = seconds;
 
         eq1.setEnabled(true);
         short[] freqRange = eq1.getBandLevelRange();
@@ -157,18 +159,18 @@ public class Binaural extends Throwable{
 
             for (int i = 0; i < list.size(); i++) {
                 jsonObject= new JSONObject();
-                jsonObject.put("id", ((Binaural)list.get(i)).id);
-                jsonObject.put("name", ((Binaural)list.get(i)).name);
-                jsonObject.put("isoBeatMin", ((Binaural)list.get(i)).paramIsoBeatMin);
-                jsonObject.put("isoBeatMax", ((Binaural)list.get(i)).paramIsoBeatMax);
-                jsonObject.put("waveMin", ((Binaural)list.get(i)).waveMin);
-                jsonObject.put("waveMax", ((Binaural)list.get(i)).waveMax);
-                jsonObject.put("path", ((Binaural)list.get(i)).paramPath);
-                jsonObject.put("frequency", ((Binaural)list.get(i)).paramFrequency);
-                jsonObject.put("minutes", ((Binaural)list.get(i)).paramMinutes);
-                jsonObject.put("decreasing", ((Binaural)list.get(i)).paramDecreasing);
-                jsonObject.put("hasMusic", ((Binaural)list.get(i)).hasMusic);
-                jsonObject.put("lastBeat", ((Binaural)list.get(i)).lastBeat);
+                jsonObject.put("id", list.get(i).id);
+                jsonObject.put("name", list.get(i).name);
+                jsonObject.put("isoBeatMin", list.get(i).paramIsoBeatMin);
+                jsonObject.put("isoBeatMax", list.get(i).paramIsoBeatMax);
+                jsonObject.put("waveMin", list.get(i).waveMin);
+                jsonObject.put("waveMax", list.get(i).waveMax);
+                jsonObject.put("path", list.get(i).paramPath);
+                jsonObject.put("frequency", list.get(i).paramFrequency);
+                jsonObject.put("minutes", list.get(i).paramMinutes);
+                jsonObject.put("decreasing", list.get(i).paramDecreasing);
+                jsonObject.put("hasMusic", list.get(i).hasMusic);
+                jsonObject.put("lastBeat", list.get(i).lastBeat);
 
                 jsonArray.put(jsonObject);
             }

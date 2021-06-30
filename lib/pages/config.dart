@@ -19,6 +19,7 @@ class Config extends State  {
   String path;
   bool decreasing;
   double minutes;
+  double seconds = sharedPrefs.seconds;
   double volumeMusic = sharedPrefs.volumeMusic;
   double volumeWaves = sharedPrefs.volumeWaves;
   bool loop = true;
@@ -76,6 +77,7 @@ class Config extends State  {
           'isoBeatMax': isoBeatMax.toInt().toString(),
           'isoBeatMin': isoBeatMin.toInt().toString(),
           'minutes': minutes.toString(),
+          'seconds': seconds.toString(),
           'volumeWave': (volumeWaves/10).toString(),
           'path': path,
           'volumeMusic': (volumeMusic/10).toString(),
@@ -340,6 +342,13 @@ class Config extends State  {
   void setMinutes(double value) {
     setState(() {
       minutes = value;
+    });
+  }
+
+  void setSeconds(double value) {
+    setState(() {
+      seconds = value;
+      sharedPrefs.seconds = seconds;
     });
   }
 

@@ -30,9 +30,9 @@ class _SplashState extends State<Splash> {
             decoration: BoxDecoration (
               color: Colors.black,
             ),
-            width: 250,
-            height: 250,
-            child: Image.asset("assets/binaural_logo.jpg"),
+            width: 300,
+            height: 300,
+            child: Image.asset("assets/binaural_logo.png"),
           ),
         )
     );

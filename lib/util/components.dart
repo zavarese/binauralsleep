@@ -29,16 +29,16 @@ class ButtonCustomState extends StatelessWidget {
       colorBackground = button.color;
       colorBorder = button.color;
       colorText = Colors.black;
-      borderWidth = 2;
+      borderWidth = 0;
     }else{
-      colorBackground = Colors.black;
-      colorBorder = button.color;
+      colorBackground = Color.fromRGBO(58, 55, 55, 1);
+      colorBorder = Colors.black;
       colorText = button.color;
-      borderWidth = 5;
+      borderWidth = 0;
     }
 
     if(button.function==null){
-      colorBorder = Colors.black;
+      colorText = Colors.black;
     }
 
     if(button.label == "STOP"){
@@ -233,7 +233,7 @@ class DisplayCustomState  extends StatelessWidget {
           ),
         ),
       width: 140,
-      height: 50,
+      height: 48,
       child: Row(
         children: [
           Text(" "),

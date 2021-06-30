@@ -66,14 +66,14 @@ public class BinauralServices extends Service implements SoundListener {
 
                         if (audioTrack1 != null && audioTrack1.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                             audioTrack2 = wavesBuilder(binaural, binaural.sessionId2, freq, -1);
-                            executeAudio(audioTrack1, audioTrack2, binaural.paramVolume, 1);
+                            executeAudio(audioTrack1, audioTrack2, binaural.paramVolume, binaural.paramSeconds);
                         } else {
                             if (audioTrack2 != null && audioTrack2.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                                 audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, freq, -1);
-                                executeAudio(audioTrack2, audioTrack1, binaural.paramVolume, 1);
+                                executeAudio(audioTrack2, audioTrack1, binaural.paramVolume, binaural.paramSeconds);
                             } else {
                                 audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, freq, -1);
-                                executeAudio(null, audioTrack1, binaural.paramVolume, 1);
+                                executeAudio(null, audioTrack1, binaural.paramVolume, binaural.paramSeconds);
                             }
                         }
 
@@ -88,14 +88,14 @@ public class BinauralServices extends Service implements SoundListener {
 
                         if (audioTrack1 != null && audioTrack1.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                             audioTrack2 = wavesBuilder(binaural, binaural.sessionId2, freq, -1);
-                            executeAudio(audioTrack1, audioTrack2, binaural.paramVolume, 1);
+                            executeAudio(audioTrack1, audioTrack2, binaural.paramVolume, binaural.paramSeconds);
                         } else {
                             if (audioTrack2 != null && audioTrack2.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                                 audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, freq, -1);
-                                executeAudio(audioTrack2, audioTrack1, binaural.paramVolume, 1);
+                                executeAudio(audioTrack2, audioTrack1, binaural.paramVolume, binaural.paramSeconds);
                             } else {
                                 audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, freq, -1);
-                                executeAudio(null, audioTrack1, binaural.paramVolume, 1);
+                                executeAudio(null, audioTrack1, binaural.paramVolume, binaural.paramSeconds);
                             }
                         }
 
@@ -105,13 +105,13 @@ public class BinauralServices extends Service implements SoundListener {
 
                 if (audioTrack1 != null && audioTrack1.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                     audioTrack2 = wavesBuilder(binaural, binaural.sessionId2, lastFreq, -1);
-                    executeAudio(audioTrack1, audioTrack2, binaural.paramVolume, LAST_MINUTES);
+                    executeAudio(audioTrack1, audioTrack2, binaural.paramVolume, LAST_MINUTES*60);
                     stopAudio(audioTrack2);
                 }
 
                 if (audioTrack2 != null && audioTrack2.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                     audioTrack1 = wavesBuilder(binaural, binaural.sessionId1, lastFreq, -1);
-                    executeAudio(audioTrack2, audioTrack1, binaural.paramVolume, LAST_MINUTES);
+                    executeAudio(audioTrack2, audioTrack1, binaural.paramVolume, LAST_MINUTES*60);
                     stopAudio(audioTrack1);
                 }
 
@@ -153,7 +153,8 @@ public class BinauralServices extends Service implements SoundListener {
                 extras.getString("path"),
                 extras.getFloat("volumeMusic"),
                 extras.getBoolean("loop"),
-                (ArrayList<Uri>) extras.getSerializable(Intent.EXTRA_STREAM)
+                (ArrayList<Uri>) extras.getSerializable(Intent.EXTRA_STREAM),
+                extras.getFloat("seconds")
         );
 
         execThread.start();
@@ -213,7 +214,7 @@ public class BinauralServices extends Service implements SoundListener {
         return Float.parseFloat(
                 String.format(
                         Locale.US, "%.1f",(
-                                (binaural.paramIsoBeatMax - binaural.paramIsoBeatMin)/(binaural.paramMinutes-LAST_MINUTES)
+                                (binaural.paramIsoBeatMax - binaural.paramIsoBeatMin)/((binaural.paramMinutes-LAST_MINUTES)*(60/15))
                         )
                 )
         );
@@ -288,8 +289,8 @@ public class BinauralServices extends Service implements SoundListener {
 
     }
 
-    private void executeAudio(AudioTrack audioCurr, AudioTrack audioNext, float volume, int minutes) {
-        int seconds;
+    private void executeAudio(AudioTrack audioCurr, AudioTrack audioNext, float volume, float seconds) {
+        boolean exit = true;
 
         audioNext.play();
         Utils.sleepThread(50);
@@ -307,18 +308,18 @@ public class BinauralServices extends Service implements SoundListener {
 
         Calendar c;
 
-        seconds = minutes * 60;
-
         do {
             if(!isPlaying.equals("true"))break;
 
-            c = Calendar.getInstance();
-            if (c.get(Calendar.SECOND) == 0) {
-                seconds = seconds - 60;
-                Utils.sleepThread(1000);
+            for (int i=0;i<60;i=i+Math.round(seconds)) {
+                c = Calendar.getInstance();
+                if (c.get(Calendar.SECOND) == i) {
+                    exit = false;
+                }
             }
+            Utils.sleepThread(1000);
 
-        } while (seconds>0);
+        } while (exit);
     }
 
     public float getCurrentFrequency(){
@@ -328,5 +329,4 @@ public class BinauralServices extends Service implements SoundListener {
     public String isPlaying(){
         return isPlaying;
     }
-
 }

@@ -15,19 +15,19 @@ TextStyle textStyleSmall = TextStyle(
 TextStyle textStyleMid = TextStyle(
   color: Colors.white,
   fontWeight: FontWeight.bold,
-  fontSize: 20,
+  fontSize: 17,
   fontStyle: FontStyle.normal,
 );
 TextStyle textStyleMidO = TextStyle(
   color: Colors.orange,
   fontWeight: FontWeight.bold,
-  fontSize: 20,
+  fontSize: 18,
   fontStyle: FontStyle.normal,
 );
 TextStyle textStyleBig = TextStyle(
   color: Colors.blueAccent,
-  fontWeight: FontWeight.normal,
-  fontSize: 50,
+  fontWeight: FontWeight.bold,
+  fontSize: 40,
   fontStyle: FontStyle.normal,
 );
 TextStyle textStyleButton = TextStyle(
@@ -49,7 +49,7 @@ fontWeight: FontWeight.normal,
 fontSize: 18
 );
 TextStyle textStyleConfigSquare = TextStyle(
-color: Color.fromRGBO(63, 111, 66, 1),
+color: Colors.black,
 fontWeight: FontWeight.normal,
 fontSize: 12,
 );

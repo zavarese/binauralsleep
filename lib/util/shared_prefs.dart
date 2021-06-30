@@ -13,6 +13,9 @@ class SharedPrefs {
 
   double get volumeWaves => _sharedPrefs.getDouble("volumeWaves") ?? 40;
   set volumeWaves(double value) => _sharedPrefs.setDouble("volumeWaves", value);
+
+  double get seconds => _sharedPrefs.getDouble("seconds") ?? 30;
+  set seconds(double value) => _sharedPrefs.setDouble("seconds", value);
 }
 
 final sharedPrefs = SharedPrefs();

@@ -72,22 +72,23 @@ class ListConfigPageState extends ListConfig with WidgetsBindingObserver {
                     borderRadius: BorderRadius.all(Radius.circular(10))
                 ),
                 width: MediaQuery.of(context).size.width,
-                height: 80,
+                height: 68,
                 child: Center(
                   child: ListTile(
                     leading: Text(greekLatter((nDataList.decreasing?nDataList.isoBeatMin:nDataList.isoBeatMax)),
                       style: textStyleBig,
                     ),
+                      minLeadingWidth: 24,
                     title: Text(nDataList.name,
                       overflow: TextOverflow.ellipsis,
                       style: textStyleMid,
                     ),
                     subtitle: (nDataList.decreasing
                       ?Text("\u2193"+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase()+'\n'+
-                        "  "+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase(), //\n'+nDataList.hasMusic,
+                        "    "+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase(), //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)
                       :Text("\u2193"+f.format(nDataList.isoBeatMin).toString()+'Hz - '+nDataList.waveMin.toLowerCase()+'\n'+
-                        "  "+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase(), //\n'+nDataList.hasMusic,
+                        "    "+f.format(nDataList.isoBeatMax).toString()+'Hz - '+nDataList.waveMax.toLowerCase(), //\n'+nDataList.hasMusic,
                           style: textStyleSmall,)),
                     trailing: Text(nDataList.frequency.toString()+"Hz\n"+nDataList.minutes.toString()+"min",
                       style: textStyleMidO,),

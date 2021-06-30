@@ -62,6 +62,7 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                     ),
                   ]
                 ),
+                Padding(padding: const EdgeInsets.all(1.0)),
                 Column(
                     children: <Widget>[
                       Padding(padding: const EdgeInsets.all(5.0)),
@@ -72,9 +73,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 value: "START",
                                 width: 50,
                                 height: 25,
-                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                borderColor: Colors.black,
                                 textStyle: textStyleConfigSquare,
-                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
+                                backgroundColor: Color.fromRGBO(63, 111, 66, 1),
                               ) ,
                             )
                           ]
@@ -86,9 +87,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 value: "STOP",
                                 width: 50,
                                 height: 25,
-                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                borderColor: Colors.black,
                                 textStyle: textStyleConfigSquare,
-                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
+                                backgroundColor: Color.fromRGBO(63, 111, 66, 1),
                               ) ,
                             ),
                           ]
@@ -105,9 +106,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 value: (decreasing ? isoBeatMax.toInt().toString(): isoBeatMin.toInt().toString())+"Hz",
                                 width: 50,
                                 height: 25,
-                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                borderColor: Colors.black,
                                 textStyle: textStyleConfigSquare,
-                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
+                                backgroundColor: Color.fromRGBO(63, 111, 66, 1),
                               ) ,
                             ),
                           ]
@@ -119,9 +120,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 value: (decreasing ? isoBeatMin.toInt().toString(): isoBeatMax.toInt().toString())+"Hz",
                                 width: 50,
                                 height: 25,
-                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                borderColor: Colors.black,
                                 textStyle: textStyleConfigSquare,
-                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
+                                backgroundColor: Color.fromRGBO(63, 111, 66, 1),
                               ) ,
                             ),
                           ]
@@ -138,9 +139,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 value: (decreasing ? waveWord(isoBeatMax): waveWord(isoBeatMin)),
                                 width: 50,
                                 height: 25,
-                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                borderColor: Colors.black,
                                 textStyle: textStyleConfigSquare,
-                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
+                                backgroundColor: Color.fromRGBO(63, 111, 66, 1),
                               ) ,
                             ),
                           ]
@@ -152,9 +153,9 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                                 value: (decreasing ? waveWord(isoBeatMin): waveWord(isoBeatMax)),
                                 width: 50,
                                 height: 25,
-                                borderColor: Color.fromRGBO(63, 111, 66, 1),
+                                borderColor: Colors.black,
                                 textStyle: textStyleConfigSquare,
-                                backgroundColor: Color.fromRGBO(28, 27, 27, 1),
+                                backgroundColor: Color.fromRGBO(63, 111, 66, 1),
                               ) ,
                             ),
                           ]
@@ -206,6 +207,20 @@ class ConfigPageState extends Config with WidgetsBindingObserver  {
                             valueMax: 60.0,
                             division: 45,
                             function: (isPlaying=="true" ? null: setMinutes),
+                        )
+                    ),
+                    Text(
+                        "Beat frequency changes every: "+seconds.toInt().toString()+"sec",
+                        textAlign: TextAlign.left,
+                        style: textStyle
+                    ),
+                    SliderCustomState(
+                        sliderCustom: SliderCustom(
+                          value: seconds,
+                          valueMin: 15.0,
+                          valueMax: 60.0,
+                          division: 45,
+                          function: (isPlaying=="true" ? null: setSeconds),
                         )
                     ),
                     Text(

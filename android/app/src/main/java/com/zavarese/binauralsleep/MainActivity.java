@@ -76,6 +76,7 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
                             intent.putExtra("isoBeatMax",Float.parseFloat(call.argument("isoBeatMax").toString()));
                             intent.putExtra("isoBeatMin",Float.parseFloat(call.argument("isoBeatMin").toString()));
                             intent.putExtra("minutes",Float.parseFloat(call.argument("minutes").toString()));
+                            intent.putExtra("seconds",Float.parseFloat(call.argument("seconds").toString()));
                             intent.putExtra("volumeWave",Float.parseFloat(call.argument("volumeWave"))/10);
                             intent.putExtra("decreasing",Boolean.parseBoolean(call.argument("decreasing").toString()));
                             intent.putExtra("path",this.path);

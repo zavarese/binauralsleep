@@ -15,9 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Binaural Beats Music',
+      title: 'Binaural Beats MP3',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+          brightness: Brightness.dark,
+          fontFamily: 'Raleway'
+      ),
       home: Splash(),
     );
   }
