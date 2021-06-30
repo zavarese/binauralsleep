@@ -62,6 +62,9 @@ public class BinauralServices extends Service implements SoundListener {
                         freq = Float.parseFloat(String.format(Locale.US, "%.2f", freq));
                         currentFrequency = binaural.paramIsoBeatMax - freq;
 
+                        System.out.println("************ currentFrequency = "+ currentFrequency);
+                        System.out.println("************ increment = "+ increment(binaural));
+
                         if(!isPlaying.equals("true"))break;
 
                         if (audioTrack1 != null && audioTrack1.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
@@ -213,8 +216,8 @@ public class BinauralServices extends Service implements SoundListener {
     private static float increment(Binaural binaural) {
         return Float.parseFloat(
                 String.format(
-                        Locale.US, "%.1f",(
-                                (binaural.paramIsoBeatMax - binaural.paramIsoBeatMin)/((binaural.paramMinutes-LAST_MINUTES)*(60/15))
+                        Locale.US, "%.2f",(
+                                (binaural.paramIsoBeatMax - binaural.paramIsoBeatMin)/((binaural.paramMinutes-LAST_MINUTES)*(60/binaural.paramSeconds))
                         )
                 )
         );

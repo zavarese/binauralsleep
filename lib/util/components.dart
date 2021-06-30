@@ -232,7 +232,7 @@ class DisplayCustomState  extends StatelessWidget {
             color: Color.fromRGBO(63, 111, 66, 1),
           ),
         ),
-      width: 140,
+      width: 168,
       height: 48,
       child: Row(
         children: [

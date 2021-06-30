@@ -32,7 +32,7 @@ class Config extends State  {
   String action = "";
   int _start;
   Timer _timer;
-  var f = new NumberFormat("00.0", "en_US");
+  var f = new NumberFormat("00.00", "en_US");
 
   //File browser
   String loading = "0.0Hz";
