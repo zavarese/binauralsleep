@@ -18,6 +18,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
     static final String KEY_FREQUENCY = "frequency";
     static final String KEY_DECREASE = "decrease";
     static final String KEY_TIME = "time";
+    static final String KEY_CHANGE = "change";
     static final String KEY_PATH = "path";
 
     private static final int DATABASE_VERSION = 1;
@@ -30,6 +31,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + KEY_FREQUENCY + " TEXT, "
             + KEY_DECREASE + " TEXT, "
             + KEY_TIME + " TEXT, "
+            + KEY_CHANGE + " TEXT, "
             + KEY_PATH + " TEXT);";
 
     private static final String PRESETTING_1 = "INSERT INTO "
@@ -40,6 +42,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + KEY_FREQUENCY  + ","
             + KEY_DECREASE  + ","
             + KEY_TIME  + ","
+            + KEY_CHANGE  + ","
             + KEY_PATH  + ""
             + ") VALUES ("
             + "\"Relaxation\","
@@ -47,6 +50,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + "\"20\","
             + "\"432\","
             + "\"1\","
+            + "\"30\","
             + "\"30\","
             + "\"\")";
 
@@ -58,6 +62,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + KEY_FREQUENCY  + ","
             + KEY_DECREASE  + ","
             + KEY_TIME  + ","
+            + KEY_CHANGE  + ","
             + KEY_PATH  + ""
             + ") VALUES ("
             + "\"Deep Relaxation\","
@@ -65,6 +70,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + "\"16\","
             + "\"432\","
             + "\"1\","
+            + "\"30\","
             + "\"30\","
             + "\"\")";
 
@@ -76,6 +82,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + KEY_FREQUENCY  + ","
             + KEY_DECREASE  + ","
             + KEY_TIME  + ","
+            + KEY_CHANGE  + ","
             + KEY_PATH  + ""
             + ") VALUES ("
             + "\"Sleep\","
@@ -83,6 +90,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + "\"13\","
             + "\"200\","
             + "\"1\","
+            + "\"30\","
             + "\"30\","
             + "\"\")";
 
@@ -94,6 +102,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + KEY_FREQUENCY  + ","
             + KEY_DECREASE  + ","
             + KEY_TIME  + ","
+            + KEY_CHANGE  + ","
             + KEY_PATH  + ""
             + ") VALUES ("
             + "\"Concentration\","
@@ -102,6 +111,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + "\"460\","
             + "\"0\","
             + "\"45\","
+            + "\"30\","
             + "\"\")";
 
     private static final String PRESETTING_5 = "INSERT INTO "
@@ -112,6 +122,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + KEY_FREQUENCY  + ","
             + KEY_DECREASE  + ","
             + KEY_TIME  + ","
+            + KEY_CHANGE  + ","
             + KEY_PATH  + ""
             + ") VALUES ("
             + "\"Deep Sleep\","
@@ -120,6 +131,7 @@ class SQLiteHelper extends SQLiteOpenHelper {
             + "\"200\","
             + "\"1\","
             + "\"45\","
+            + "\"30\","
             + "\"\")";
 
 /*

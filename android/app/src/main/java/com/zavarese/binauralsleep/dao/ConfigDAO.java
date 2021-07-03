@@ -85,7 +85,8 @@ public class ConfigDAO {
             b.paramFrequency = cursor.getFloat(4);
             b.paramDecreasing = (cursor.getInt(5)==0?false:true);
             b.paramMinutes = cursor.getFloat(6);
-            b.paramPath = cursor.getString(7);
+            b.paramSeconds = cursor.getFloat(7);
+            b.paramPath = cursor.getString(8);
             b.waveMin = waveWord(b.paramIsoBeatMin);
             b.waveMax = waveWord(b.paramIsoBeatMax);
 
@@ -123,6 +124,7 @@ public class ConfigDAO {
         values.put(SQLiteHelper.KEY_FREQUENCY, b.paramFrequency);
         values.put(SQLiteHelper.KEY_DECREASE, b.paramDecreasing);
         values.put(SQLiteHelper.KEY_TIME, b.paramMinutes);
+        values.put(SQLiteHelper.KEY_CHANGE, b.paramSeconds);
         values.put(SQLiteHelper.KEY_PATH, b.paramPath);
 
         long id = database.insert(SQLiteHelper.TABLE_NAME, null, values);
@@ -142,6 +144,7 @@ public class ConfigDAO {
         values.put(SQLiteHelper.KEY_FREQUENCY, b.paramFrequency);
         values.put(SQLiteHelper.KEY_DECREASE, b.paramDecreasing);
         values.put(SQLiteHelper.KEY_TIME, b.paramMinutes);
+        values.put(SQLiteHelper.KEY_CHANGE, b.paramSeconds);
         values.put(SQLiteHelper.KEY_PATH, b.paramPath);
 
         database.update(SQLiteHelper.TABLE_NAME, values,

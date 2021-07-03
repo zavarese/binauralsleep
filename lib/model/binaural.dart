@@ -13,6 +13,7 @@ class Binaural {
   String path;
   int frequency;
   int minutes;
+  int seconds;
   bool decreasing;
   String hasMusic;
   String lastBeat;
@@ -27,6 +28,7 @@ class Binaural {
     this.path,
     this.frequency,
     this.minutes,
+    this.seconds,
     this.decreasing,
     this.hasMusic,
     this.lastBeat,
@@ -42,6 +44,7 @@ class Binaural {
     path: json["path"],
     frequency: json["frequency"],
     minutes: json["minutes"],
+    seconds: json["seconds"],
     decreasing: json["decreasing"],
     hasMusic: json["hasMusic"],
     lastBeat: json["lastBeat"],
@@ -57,6 +60,7 @@ class Binaural {
     "path": path,
     "frequency": frequency,
     "minutes": minutes,
+    "seconds": seconds,
     "decreasing": decreasing,
     "hasMusic": hasMusic,
     "lastBeat": lastBeat,

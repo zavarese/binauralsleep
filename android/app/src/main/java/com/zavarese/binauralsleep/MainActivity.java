@@ -116,7 +116,8 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
                                             Float.parseFloat(call.argument("isoBeatMax")),
                                             Boolean.parseBoolean(call.argument("decreasing")),
                                             call.argument("path"),
-                                            Float.parseFloat(call.argument("minutes"))
+                                            Float.parseFloat(call.argument("minutes")),
+                                            Float.parseFloat(call.argument("seconds"))
                             ));
 
                             spanMessage("Configuration created");
@@ -133,7 +134,8 @@ public class MainActivity extends FlutterActivity implements ServiceConnection {
                                             Float.parseFloat(call.argument("isoBeatMax")),
                                             Boolean.parseBoolean(call.argument("decreasing")),
                                             call.argument("path"),
-                                            Float.parseFloat(call.argument("minutes"))
+                                            Float.parseFloat(call.argument("minutes")),
+                                            Float.parseFloat(call.argument("seconds"))
                             ));
 
                             spanMessage("Configuration updated");

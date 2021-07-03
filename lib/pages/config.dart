@@ -19,13 +19,13 @@ class Config extends State  {
   String path;
   bool decreasing;
   double minutes;
-  double seconds = sharedPrefs.seconds;
+  double seconds;
   double volumeMusic = sharedPrefs.volumeMusic;
   double volumeWaves = sharedPrefs.volumeWaves;
   bool loop = true;
 
 
-  Config(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing, this.minutes);
+  Config(this.id,this.name,this.isoBeatMin,this.isoBeatMax,this.waveMin,this.waveMax,this.path,this.frequency,this.decreasing, this.minutes, this.seconds);
 
   static const platform = const MethodChannel('com.zavarese.binauralsleep/binaural');
   String _responseFromNativeCode = '';
@@ -191,6 +191,7 @@ class Config extends State  {
         'decreasing': decreasing.toString(),
         'path': path,
         'minutes': minutes.toString(),
+        'seconds': seconds.toString(),
       });
 
       response = value;
@@ -218,6 +219,7 @@ class Config extends State  {
         'decreasing': decreasing.toString(),
         'path': path,
         'minutes': minutes.toString(),
+        'seconds': seconds.toString(),
       });
       response = value;
     } on PlatformException catch (e) {
@@ -348,7 +350,6 @@ class Config extends State  {
   void setSeconds(double value) {
     setState(() {
       seconds = value;
-      sharedPrefs.seconds = seconds;
     });
   }
 

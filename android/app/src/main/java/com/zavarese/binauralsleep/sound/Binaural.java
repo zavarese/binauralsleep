@@ -55,19 +55,7 @@ public class Binaural extends Throwable{
         eq2 = new Equalizer(Integer.MAX_VALUE,sessionID2);
     };
 
-    public Binaural(Equalizer eq_1, Equalizer eq_2, int sessionID1, int sessionID2, int sessionID3, int sessionID4, MainActivity mainActivity){
-        this.eq1 = eq_1;
-        this.eq2 = eq_2;
-        this.mainActivity = mainActivity;
-
-        sessionId1 = sessionID1;
-        sessionId2 = sessionID2;
-        sessionId3 = sessionID3;
-        sessionId4 = sessionID4;
-    };
-
-
-    public Binaural(int id, String name, float frequency, float isoBeatMin,  float isoBeatMax, boolean decreasing, String path, float minutes){
+    public Binaural(int id, String name, float frequency, float isoBeatMin,  float isoBeatMax, boolean decreasing, String path, float minutes, float paramSeconds){
         this.id = id;
         this.name = name;
         this.paramFrequency = Math.round(frequency);
@@ -78,7 +66,7 @@ public class Binaural extends Throwable{
         this.waveMax = waveWord(isoBeatMax);
         this.paramPath = path;
         this.paramMinutes = Math.round(minutes);
-
+        this.paramSeconds = Math.round(paramSeconds);
 
         if(this.paramPath == null || this.paramPath.equals("")){
             this.hasMusic = "music:no";
@@ -168,6 +156,7 @@ public class Binaural extends Throwable{
                 jsonObject.put("path", list.get(i).paramPath);
                 jsonObject.put("frequency", list.get(i).paramFrequency);
                 jsonObject.put("minutes", list.get(i).paramMinutes);
+                jsonObject.put("seconds", list.get(i).paramSeconds);
                 jsonObject.put("decreasing", list.get(i).paramDecreasing);
                 jsonObject.put("hasMusic", list.get(i).hasMusic);
                 jsonObject.put("lastBeat", list.get(i).lastBeat);

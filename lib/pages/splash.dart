@@ -31,8 +31,8 @@ class _SplashState extends State<Splash> {
             decoration: BoxDecoration (
               color: Colors.black,
             ),
-            width: 350,
-            height: 900,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
             child: Image.asset("assets/binaural_logo.png"),
           ),
         )
