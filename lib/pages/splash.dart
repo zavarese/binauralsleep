@@ -27,11 +27,12 @@ class _SplashState extends State<Splash> {
         color: Colors.black,
         child: Center(
           child: Container(
+            alignment: Alignment.bottomCenter,
             decoration: BoxDecoration (
               color: Colors.black,
             ),
-            width: 300,
-            height: 300,
+            width: 350,
+            height: 900,
             child: Image.asset("assets/binaural_logo.png"),
           ),
         )
